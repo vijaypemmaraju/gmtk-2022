@@ -1,64 +1,198 @@
 import InputManager from '../managers/InputManager';
 
 const PlayerStats = {
-  acceleration: 10,
+  acceleration: 0.01,
   maxVelocity: 10,
+  jumpVelocity: 10,
+  dodgeVelocity: 25,
+  msBetweenJumps: 250,
+  msBetweenDodges: 1000,
+  dodgeMs: 250,
 };
 
 export default class PlayerController {
-  sprite = null;
+  lastJumpTime: number | undefined = undefined;
 
-  colliders = {
-    body: null,
-    bottom: null,
-    left: null,
-    right: null,
+  lastDodgeTime: number | undefined = undefined;
+
+  sprite: Phaser.Physics.Matter.Sprite;
+
+  colliders: {
+    body?: MatterJS.BodyType;
+    bottom?: MatterJS.BodyType;
+    left?: MatterJS.BodyType;
+    right?: MatterJS.BodyType;
+  } = {};
+
+  numTouching = {
+    body: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   };
 
-  velocity = new Phaser.Math.Vector2(0, 0);
+  blocked = {
+    body: false,
+    left: false,
+    right: false,
+    bottom: false,
+  };
+
+  xVelocity = 0;
 
   constructor(scene: Phaser.Scene) {
     scene.load.spritesheet('player', 'assets/sprites/dice.png', {
-      frameWidth: 68,
-      frameHeight: 68,
+      frameWidth: 64,
+      frameHeight: 64,
+      spacing: 2,
+      margin: 2,
     });
   }
 
   create(scene: Phaser.Scene) {
-    this.sprite = scene.physics.add.sprite(0, 0, 'player', 0);
-    const matter = new Phaser.Physics.Matter.MatterPhysics(scene);
+    this.sprite = scene.matter.add.sprite(0, 0, 'player', 0);
     const { width, height } = this.sprite;
 
-    matter.bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
-    playerController.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, {
+    // The player's body is going to be a compound body:
+    //  - playerBody is the solid body that will physically interact with the world. It has a
+    //    chamfer (rounded edges) to avoid the problem of ghost vertices: http://www.iforce2d.net/b2dtut/ghost-vertices
+    //  - Left/right/bottom sensors that will not interact physically but will allow us to check if
+    //    the player is standing on solid ground or pushed up against a solid object.
+
+    // Move the sensor to player center
+    const sx = width / 2;
+    const sy = height / 2;
+
+    this.colliders.body = scene.matter.bodies.rectangle(sx, sy, width, height, {
+      // chamfer: { radius: 10 },
+    });
+    this.colliders.bottom = scene.matter.bodies.rectangle(sx, height, sx, 5, {
       isSensor: true,
     });
-    playerController.sensors.left = M.Bodies.rectangle(
-      sx - w * 0.45,
+    this.colliders.left = scene.matter.bodies.rectangle(
+      sx - width * 0.45,
       sy,
       5,
-      h * 0.25,
-      { isSensor: true },
+      height * 0.25,
+      {
+        isSensor: true,
+      },
     );
-    playerController.sensors.right = M.Bodies.rectangle(
-      sx + w * 0.45,
+    this.colliders.right = scene.matter.bodies.rectangle(
+      sx + width * 0.45,
       sy,
       5,
-      h * 0.25,
-      { isSensor: true },
+      height * 0.25,
+      {
+        isSensor: true,
+      },
     );
+
+    const compoundBody = scene.matter.body.create({
+      parts: [
+        this.colliders.body,
+        this.colliders.bottom,
+        this.colliders.left,
+        this.colliders.right,
+      ],
+      restitution: 0.05, // Prevent body from sticking against a wall
+      friction: 0.01,
+    });
+
+    this.sprite.setExistingBody(compoundBody);
+    this.sprite.setFixedRotation();
+    this.sprite.setPosition(400, 400);
+
+    scene.matter.world.on('beforeupdate', event => {
+      this.numTouching.left = 0;
+      this.numTouching.right = 0;
+      this.numTouching.bottom = 0;
+    });
+
+    scene.matter.world.on('collisionactive', event => {
+      const playerBody = this.colliders.body;
+      const { left } = this.colliders;
+      const { right } = this.colliders;
+      const { bottom } = this.colliders;
+
+      for (let i = 0; i < event.pairs.length; i += 1) {
+        const { bodyA } = event.pairs[i];
+        const { bodyB } = event.pairs[i];
+
+        if (bodyA === playerBody || bodyB === playerBody) {
+          continue;
+        } else if (bodyA === bottom || bodyB === bottom) {
+          // Standing on any surface counts (e.g. jumping off of a non-static crate).
+          this.numTouching.bottom += 1;
+        } else if (
+          (bodyA === left && bodyB.isStatic) ||
+          (bodyB === left && bodyA.isStatic)
+        ) {
+          // Only static objects count since we don't want to be blocked by an object that we
+          // can push around.
+          this.numTouching.left += 1;
+        } else if (
+          (bodyA === right && bodyB.isStatic) ||
+          (bodyB === right && bodyA.isStatic)
+        ) {
+          this.numTouching.right += 1;
+        }
+      }
+    });
+
+    scene.matter.world.on('afterupdate', event => {
+      this.blocked.right = this.numTouching.right > 0;
+      this.blocked.left = this.numTouching.left > 0;
+      this.blocked.bottom = this.numTouching.bottom > 0;
+    });
   }
 
   update(time: number, delta: number) {
-    // Update movement
-    const targetVelocity = new Phaser.Math.Vector2(
-      InputManager.getXAxis() * PlayerStats.maxVelocity,
-      0,
-    );
+    const isDodging =
+      time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
 
-    this.velocity = this.velocity.lerp(
+    // Update movement
+    const targetVelocity = InputManager.getXAxis() * PlayerStats.maxVelocity;
+
+    this.xVelocity = Phaser.Math.Linear(
+      this.xVelocity,
       targetVelocity,
       PlayerStats.acceleration * delta,
     );
+
+    if (InputManager.getDodge()) {
+      if (!isDodging) {
+        this.lastDodgeTime = time;
+        this.xVelocity = Math.sign(this.xVelocity) * PlayerStats.dodgeVelocity;
+      }
+    }
+
+    if (
+      (this.xVelocity > 0 && !this.blocked.right) ||
+      (this.xVelocity < 0 && !this.blocked.left)
+    ) {
+      this.sprite.setVelocityX(this.xVelocity);
+    }
+
+    console.log(this.blocked);
+
+    if (InputManager.getJump()) {
+      const msSinceJump =
+        time - (this.lastJumpTime ?? -PlayerStats.msBetweenJumps);
+      if (msSinceJump >= PlayerStats.msBetweenJumps) {
+        if (this.blocked.bottom) {
+          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
+        } else if (this.blocked.left) {
+          // Jump up and away from the wall
+          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
+          this.sprite.setVelocityX(PlayerStats.jumpVelocity);
+        } else if (this.blocked.right) {
+          // Jump up and away from the wall
+          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
+          this.sprite.setVelocityX(-PlayerStats.jumpVelocity);
+        }
+        this.lastJumpTime = time;
+      }
+    }
   }
 }
