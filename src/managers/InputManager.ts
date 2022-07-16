@@ -22,6 +22,10 @@ export default class InputManager {
     return InputManager.cursorKeys.space.isDown;
   }
 
+  static getJustJumped(): boolean {
+    return Phaser.Input.Keyboard.JustDown(InputManager.cursorKeys.space);
+  }
+
   static getDodge(): boolean {
     return InputManager.cursorKeys.shift.isDown;
   }
