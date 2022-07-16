@@ -18,6 +18,10 @@ export default class InputManager {
     return axis;
   }
 
+  static getYAxis(): number {
+    return InputManager.cursorKeys.up.isDown ? -1 : 0;
+  }
+
   static getJump(): boolean {
     return InputManager.cursorKeys.space.isDown;
   }

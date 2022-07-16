@@ -4,7 +4,7 @@ const PlayerStats = {
   acceleration: 0.01,
   maxVelocity: 10,
   jumpVelocity: 10,
-  dodgeVelocity: 25,
+  dodgeVelocity: 50,
   msBetweenJumps: 250,
   msBetweenDodges: 1000,
   dodgeMs: 250,
@@ -14,6 +14,8 @@ export default class PlayerController {
   lastJumpTime: number | undefined = undefined;
 
   lastDodgeTime: number | undefined = undefined;
+
+  dodgeAim: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
 
   sprite: Phaser.Physics.Matter.Sprite;
 
@@ -152,19 +154,65 @@ export default class PlayerController {
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
 
     // Update movement
-    const targetVelocity = InputManager.getXAxis() * PlayerStats.maxVelocity;
+    const canMove = !isDodging;
+    if (canMove) {
+      const targetVelocity = InputManager.getXAxis() * PlayerStats.maxVelocity;
 
-    this.xVelocity = Phaser.Math.Linear(
-      this.xVelocity,
-      targetVelocity,
-      PlayerStats.acceleration * delta,
-    );
+      this.xVelocity = Phaser.Math.Linear(
+        this.xVelocity,
+        targetVelocity,
+        PlayerStats.acceleration * delta,
+      );
+    }
+
+    let doJump = false;
+    if (InputManager.getJump()) {
+      const msSinceJump =
+        time - (this.lastJumpTime ?? -PlayerStats.msBetweenJumps);
+      const canJump =
+        msSinceJump >= PlayerStats.msBetweenJumps &&
+        !isDodging &&
+        (this.blocked.bottom || this.blocked.left || this.blocked.right);
+
+      if (canJump) {
+        doJump = true;
+        this.lastJumpTime = time;
+        if (this.blocked.left) {
+          this.xVelocity = PlayerStats.jumpVelocity;
+        } else if (this.blocked.right) {
+          this.xVelocity = -PlayerStats.jumpVelocity;
+        }
+      }
+    }
 
     if (InputManager.getDodge()) {
-      if (!isDodging) {
+      const canDodge =
+        time >=
+        (this.lastDodgeTime ?? -PlayerStats.msBetweenDodges) +
+          PlayerStats.msBetweenDodges;
+      if (canDodge) {
         this.lastDodgeTime = time;
-        this.xVelocity = Math.sign(this.xVelocity) * PlayerStats.dodgeVelocity;
+        this.dodgeAim = new Phaser.Math.Vector2(
+          InputManager.getXAxis(),
+          InputManager.getYAxis(),
+        );
+        if (this.dodgeAim.lengthSq() === 0) {
+          this.dodgeAim = new Phaser.Math.Vector2(1, 0);
+        }
       }
+    }
+
+    if (isDodging) {
+      const d = (time - (this.lastDodgeTime as number)) / PlayerStats.dodgeMs;
+      const dodgeStart = this.dodgeAim
+        .normalize()
+        .scale(PlayerStats.dodgeVelocity);
+      const dodgeEnd = Phaser.Math.Vector2.ZERO;
+      // ease-out cubic @see {@link: https://easings.net/#easeOutCubic}
+      const t = 1 - (1 - d) ** 3;
+      const easedDodgeVelocity = dodgeStart.lerp(dodgeEnd, t);
+      this.xVelocity = easedDodgeVelocity.x;
+      this.sprite.setVelocityY(easedDodgeVelocity.y);
     }
 
     if (
@@ -174,25 +222,8 @@ export default class PlayerController {
       this.sprite.setVelocityX(this.xVelocity);
     }
 
-    console.log(this.blocked);
-
-    if (InputManager.getJump()) {
-      const msSinceJump =
-        time - (this.lastJumpTime ?? -PlayerStats.msBetweenJumps);
-      if (msSinceJump >= PlayerStats.msBetweenJumps) {
-        if (this.blocked.bottom) {
-          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
-        } else if (this.blocked.left) {
-          // Jump up and away from the wall
-          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
-          this.sprite.setVelocityX(PlayerStats.jumpVelocity);
-        } else if (this.blocked.right) {
-          // Jump up and away from the wall
-          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
-          this.sprite.setVelocityX(-PlayerStats.jumpVelocity);
-        }
-        this.lastJumpTime = time;
-      }
+    if (doJump) {
+      this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
     }
   }
 }
