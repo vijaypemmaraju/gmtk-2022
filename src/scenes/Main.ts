@@ -6,6 +6,7 @@ import EnemyController from '../controllers/EnemyController';
 import PlayerController from '../controllers/PlayerController';
 import InputManager from '../managers/InputManager';
 import ProjectileManager from '../managers/ProjectileManager';
+import SoundManager from '../managers/SoundManager';
 import Preloader from '../Preloader';
 
 export default class Main extends Phaser.Scene {
@@ -32,6 +33,7 @@ export default class Main extends Phaser.Scene {
     this.projectileManager = new ProjectileManager(this);
     this.playerController = new PlayerController();
     this.playerController.create(this);
+    SoundManager.load(this);
     const enemy = new Enemy();
     const enemyController = new EnemyController(enemy, this);
     enemy.create(this);

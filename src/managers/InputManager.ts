@@ -24,7 +24,7 @@ export default class InputManager {
       InputConfig,
       true,
     ) as InputKeys;
-    InputManager.pointer = scene.input.mousePointer;
+    InputManager.pointer = scene.input.activePointer;
   }
 
   static getXAxis(): number {
