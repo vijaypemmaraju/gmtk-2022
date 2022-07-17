@@ -1012,12 +1012,41 @@ html {
   height: 100vh;
 }
 
+.h-5 {
+  height: 1.25rem;
+}
+
 .w-\[100vw\] {
   width: 100vw;
 }
 
+.w-full {
+  width: 100%;
+}
+
+.w-\[25\%\] {
+  width: 25%;
+}
+
+.resize {
+  resize: both;
+}
+
 .rounded {
   border-radius: 0.25rem;
+}
+
+.bg-red-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(153 27 27 / var(--tw-bg-opacity));
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
+.pl-2 {
+  padding-left: 0.5rem;
 }
 
 .filter {
