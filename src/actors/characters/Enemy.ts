@@ -1,4 +1,6 @@
-import useStore from '../react/useStore';
+import useStore from '../../react/useStore';
+import Collision from '../Collision';
+import SimpleGun from '../weapons/EnemyWeapons/SimpleGun';
 
 const EnemyStats = {
   maxHealth: 1000,
@@ -12,6 +14,8 @@ export default class Enemy {
   scene: Phaser.Scene;
 
   health = EnemyStats.maxHealth;
+
+  equippedWeapon = new SimpleGun();
 
   static preload(scene: Phaser.Scene) {
     scene.load.atlas('d4', 'assets/sprites/d4.png', 'assets/sprites/d4.json');
@@ -42,6 +46,8 @@ export default class Enemy {
     this.sprite.setPosition(800, 250);
     this.sprite.setIgnoreGravity(true);
     this.sprite.setFixedRotation();
+    this.sprite.setCollisionCategory(Collision.COLLISION_CATEGORIES.Enemy);
+    this.sprite.setCollidesWith(Collision.COLLISION_MASKS.Enemy);
 
     useStore.setState({
       enemyHealth: this.health,

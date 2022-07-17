@@ -1,4 +1,5 @@
 import PlayerCharacter from '../actors/characters/PlayerCharacter';
+import Collision from '../actors/Collision';
 import InputManager from '../managers/InputManager';
 import useStore from '../react/useStore';
 
@@ -266,6 +267,8 @@ export default class PlayerController {
     (compoundBody as MatterJS.BodyType).label = 'playerCompound';
 
     this.sprite.setExistingBody(compoundBody);
+    this.sprite.setCollisionCategory(Collision.COLLISION_CATEGORIES.Player);
+    this.sprite.setCollidesWith(Collision.COLLISION_MASKS.Player);
     this.sprite.setFixedRotation();
     this.sprite.setPosition(400, 400);
 
@@ -465,14 +468,14 @@ export default class PlayerController {
 
     const playerWeapon = this.character.getEquippedWeapon();
     if (InputManager.getFire() && playerWeapon.canFire(time)) {
-      const spawnPosition = new Phaser.Math.Vector2(
+      const firePosition = new Phaser.Math.Vector2(
         this.sprite.x,
         this.sprite.y,
       );
-      const spawnDirection = InputManager.getAim()
-        .subtract(spawnPosition)
+      const fireDirection = InputManager.getAim()
+        .subtract(firePosition)
         .normalize();
-      playerWeapon.fire(spawnPosition, spawnDirection, time, scene);
+      playerWeapon.fire(firePosition, fireDirection, time, scene);
     }
 
     // #endregion

@@ -1,5 +1,6 @@
 import { createMachine, interpret } from 'xstate';
-import Enemy from '../actor/Enemy';
+import Enemy from '../actors/characters/Enemy';
+import Main from '../scenes/Main';
 
 // Stateless machine definition
 // machine.transition(...) is a pure function used by the interpreter.
@@ -45,18 +46,38 @@ export default class EnemyController {
     }, 1000);
   }
 
-  update(time: number, delta: number): void {
+  update(time: number, delta: number, scene: Main): void {
     this.enemy.update(time, delta);
 
-    if (this.enemy.isAlive() && this.currentState === '4') {
-      const newX = this.enemy.sprite.x + Phaser.Math.Between(-5, 5);
-      const newY = this.enemy.sprite.y + Phaser.Math.Between(-5, 5);
+    if (this.enemy.isAlive()) {
+      if (this.currentState === '4') {
+        const newX = this.enemy.sprite.x + Phaser.Math.Between(-5, 5);
+        const newY = this.enemy.sprite.y + Phaser.Math.Between(-5, 5);
 
-      const newVelocity = {
-        x: newX - this.enemy.sprite.x,
-        y: newY - this.enemy.sprite.y,
-      };
-      this.enemy.sprite.setVelocity(newVelocity.x, newVelocity.y);
+        const newVelocity = {
+          x: newX - this.enemy.sprite.x,
+          y: newY - this.enemy.sprite.y,
+        };
+        this.enemy.sprite.setVelocity(newVelocity.x, newVelocity.y);
+      }
+
+      if (this.enemy.equippedWeapon.canFire(time)) {
+        const firePosition = new Phaser.Math.Vector2(
+          this.enemy.sprite.x,
+          this.enemy.sprite.y,
+        );
+        const playerPosition = new Phaser.Math.Vector2(
+          scene.playerController.sprite.x,
+          scene.playerController.sprite.y,
+        );
+        const fireDirection = playerPosition.subtract(firePosition).normalize();
+        this.enemy.equippedWeapon.fire(
+          firePosition,
+          fireDirection,
+          time,
+          scene,
+        );
+      }
     }
   }
 }

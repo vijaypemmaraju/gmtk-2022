@@ -11,36 +11,30 @@ export default class ProjectileManager {
   }
 
   static preload(scene: Phaser.Scene) {
-    scene.load.image('bullet', 'assets/sprites/bullet.png');
+    scene.load.image('player-bullet', 'assets/textures/player-bullet.png');
+    scene.load.image('enemy-bullet', 'assets/textures/enemy-bullet.png');
   }
 
   static addProjectile(projectile: Projectile) {
     ProjectileManager.projectiles.push(projectile);
     projectile.sprite.on('collide', (_a, _b, { bodyA, bodyB }) => {
-      if (!bodyA.label.includes('player') && !bodyB.label.includes('player')) {
-        if (
-          bodyA.label.includes('projectile') &&
-          bodyB.label.includes('projectile')
-        ) {
-          return;
-        }
-        projectile.onHit(bodyA === projectile.sprite.body ? bodyB : bodyA);
-        ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
-        projectile.destroy();
-        ProjectileManager.projectiles.splice(
-          ProjectileManager.projectiles.indexOf(projectile),
-          1,
-        );
-      }
+      projectile.onHit(bodyA === projectile.sprite.body ? bodyB : bodyA);
+      projectile.destroy();
+      ProjectileManager.projectiles.splice(
+        ProjectileManager.projectiles.indexOf(projectile),
+        1,
+      );
     });
   }
 
   static applyEnemyDamage(damage: number) {
     ProjectileManager.scene.enemyController.enemy.hit(damage);
+    ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
   }
 
   static applyPlayerDamage(damage: number) {
-    console.log(`Player hit! ${damage}`);
+    ProjectileManager.scene.playerController.character.hit(damage);
+    ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
   }
 
   update(time: number, delta: number, scene: Phaser.Scene) {

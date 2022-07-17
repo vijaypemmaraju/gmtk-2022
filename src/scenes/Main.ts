@@ -1,5 +1,7 @@
+import { ManOutlined } from '@mui/icons-material';
 import Phaser from 'phaser';
-import Enemy from '../actor/Enemy';
+import Enemy from '../actors/characters/Enemy';
+import Collision from '../actors/Collision';
 import EnemyController from '../controllers/EnemyController';
 import PlayerController from '../controllers/PlayerController';
 import InputManager from '../managers/InputManager';
@@ -38,8 +40,23 @@ export default class Main extends Phaser.Scene {
     const tileset = map.addTilesetImage('tilesheet');
     const layer = map.createLayer(0, tileset, 0, 0);
     map.setCollisionBetween(0, 20, true);
-    this.matter.world.convertTilemapLayer(layer);
+    const { layer: layerData } = layer;
+    layer
+      .getTilesWithin(0, 0, layerData.width, layerData.height, {
+        isColliding: true,
+      })
+      .forEach(tile => {
+        const matterBody = new Phaser.Physics.Matter.TileBody(
+          this.matter.world,
+          tile,
+          {
+            isStatic: true,
+          },
+        );
 
+        matterBody.setCollisionCategory(Collision.COLLISION_CATEGORIES.Map);
+        matterBody.setCollidesWith(Collision.COLLISION_MASKS.Map);
+      });
     this.matter.world.createDebugGraphic();
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
   }
@@ -47,6 +64,6 @@ export default class Main extends Phaser.Scene {
   update(time: number, delta: number): void {
     this.playerController.update(time, delta, this);
     this.projectileManager.update(time, delta, this);
-    this.enemyController.update(time, delta);
+    this.enemyController.update(time, delta, this);
   }
 }

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Enemy from './actor/Enemy';
+import Enemy from './actors/characters/Enemy';
 import PlayerController from './controllers/PlayerController';
 import ProjectileManager from './managers/ProjectileManager';
 

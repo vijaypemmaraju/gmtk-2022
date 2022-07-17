@@ -1,8 +1,10 @@
 import ProjectileManager from '../../managers/ProjectileManager';
+import Collision from '../Collision';
 
 export type ProjectileStats = {
   speed: number;
   damage: number;
+  target: 'enemy' | 'player';
 };
 
 export default abstract class Projectile {
@@ -33,6 +35,16 @@ export default abstract class Projectile {
     );
     (sprite.body as MatterJS.BodyType).label = 'projectile';
     sprite.setFixedRotation();
+    sprite.setCollisionCategory(
+      this.stats.target === 'enemy'
+        ? Collision.COLLISION_CATEGORIES.PlayerProjectile
+        : Collision.COLLISION_CATEGORIES.EnemyProjectile,
+    );
+    sprite.setCollidesWith(
+      this.stats.target === 'enemy'
+        ? Collision.COLLISION_MASKS.PlayerProjectile
+        : Collision.COLLISION_MASKS.EnemyProjectile,
+    );
     return sprite;
   }
 
@@ -91,7 +103,15 @@ export default abstract class Projectile {
     this.explosionEmitter.explode(1, this.sprite.x, this.sprite.y);
   }
 
-  abstract applyDamage(body: MatterJS.BodyType): void;
+  applyDamage(body: MatterJS.BodyType): void {
+    if (body.label.includes(this.stats.target)) {
+      if (this.stats.target === 'enemy') {
+        ProjectileManager.applyEnemyDamage(this.stats.damage);
+      } else {
+        ProjectileManager.applyPlayerDamage(this.stats.damage);
+      }
+    }
+  }
 
   onHit(body: MatterJS.BodyType): void {
     this.explode();

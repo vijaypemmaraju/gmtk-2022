@@ -1,4 +1,4 @@
-import Bullet from '../../PlayerProjectiles/Bullet';
+import PlayerBullet from '../../PlayerProjectiles/PlayerBullet';
 import { IProjectile } from '../../Projectile';
 import MultiFireWeapon, { MultiFireWeaponStats } from './MultiFireWeapon';
 
@@ -8,7 +8,7 @@ const WeaponTwoStats: MultiFireWeaponStats = {
 };
 
 export default class WeaponTwo extends MultiFireWeapon {
-  EquippedProjectileClass: IProjectile = Bullet;
+  EquippedProjectileClass: IProjectile = PlayerBullet;
 
   stats = WeaponTwoStats;
 }
