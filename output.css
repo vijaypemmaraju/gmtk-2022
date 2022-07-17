@@ -1444,6 +1444,10 @@ body[dir="rtl"] .checkbox:checked,
   overflow-y: auto;
 }
 
+.pointer-events-auto {
+  pointer-events: auto;
+}
+
 .static {
   position: static;
 }
