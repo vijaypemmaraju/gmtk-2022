@@ -25,6 +25,11 @@ export default class Main extends Phaser.Scene {
     Preloader.preload(this);
     this.load.tilemapTiledJSON('map', 'assets/levels/1.json');
     this.load.image('tilesheet', 'assets/levels/tilesheet.png');
+    this.load.plugin(
+      'rexoutlinepipelineplugin',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexoutlinepipelineplugin.min.js',
+      true,
+    );
   }
 
   create() {
@@ -65,6 +70,12 @@ export default class Main extends Phaser.Scene {
       });
     // this.matter.world.createDebugGraphic();
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+    const pipelineInstance = this.plugins
+      .get('rexoutlinepipelineplugin')
+      .add(this.cameras.main, {
+        outlineColor: 0x000000,
+      });
   }
 
   update(time: number, delta: number): void {

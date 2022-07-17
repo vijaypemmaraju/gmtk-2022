@@ -50,6 +50,7 @@ export default abstract class Projectile {
         ? Collision.COLLISION_MASKS.PlayerProjectile
         : Collision.COLLISION_MASKS.EnemyProjectile,
     );
+
     return sprite;
   }
 
