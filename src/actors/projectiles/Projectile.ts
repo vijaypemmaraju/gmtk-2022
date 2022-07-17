@@ -23,6 +23,8 @@ export default abstract class Projectile {
 
   hasExploded: boolean = false;
 
+  explosionCount = 1;
+
   protected createSprite(
     position: Phaser.Math.Vector2,
     scene: Phaser.Scene,
@@ -106,8 +108,23 @@ export default abstract class Projectile {
   }
 
   protected playExplodeEffects(): void {
-    this.explosionEmitter.explode(1, this.sprite.x, this.sprite.y);
-    SoundManager.play('explosion', Phaser.Math.FloatBetween(0.25, 0.35), 2);
+    this.explosionEmitter.explode(
+      this.explosionCount,
+      this.sprite.x,
+      this.sprite.y,
+    );
+
+    for (let i = 0; i < this.explosionCount; i += 1) {
+      setTimeout(
+        () =>
+          SoundManager.play(
+            'explosion',
+            Phaser.Math.FloatBetween(0.55, 0.75),
+            2,
+          ),
+        Phaser.Math.FloatBetween(0, 100),
+      );
+    }
   }
 
   applyDamage(body: MatterJS.BodyType): void {

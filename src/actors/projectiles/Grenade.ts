@@ -47,6 +47,7 @@ export default abstract class Grenade extends Projectile {
     super.instantiate(position, direction, scene);
     const blastVelocity = direction.clone().scale(this.stats.startSpeed);
     this.sprite.setVelocity(blastVelocity.x, blastVelocity.y);
+    this.explosionCount = 15;
   }
 
   protected aoeExplode(scene: Phaser.Scene) {
