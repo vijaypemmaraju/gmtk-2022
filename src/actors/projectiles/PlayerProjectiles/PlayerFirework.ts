@@ -3,12 +3,12 @@ import PlayerFireworkShell from './PlayerFireworkShell';
 
 const PlayerFireworkStats: FireworkStats = {
   damage: 0,
-  numProjectilesToSpawn: 16,
+  numProjectilesToSpawn: 36,
   ProjectileToSpawn: PlayerFireworkShell,
   speed: 0,
-  startSpeed: 15,
+  startSpeed: 20,
   target: 'enemy',
-  timeToLiveSeconds: 1,
+  timeToLiveSeconds: 0.4,
 };
 
 export default class PlayerFirework extends Firework {

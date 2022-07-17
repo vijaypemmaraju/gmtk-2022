@@ -12,6 +12,7 @@ const PlayerStats = {
   msBetweenJumps: 250,
   msBetweenDodges: 1000,
   dodgeMs: 250,
+  dodgeGracePeriod: 100,
 };
 
 const rotateArray = (array: number[], amount: number) => {
@@ -359,9 +360,10 @@ export default class PlayerController {
   }
 
   update(time: number, delta: number, scene: Phaser.Scene) {
+    const dodgeWithGrace = PlayerStats.dodgeMs + PlayerStats.dodgeGracePeriod;
     // #region Movement
     const isDodging =
-      time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
+      time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < dodgeWithGrace;
     this.character.setInvincibility(isDodging);
 
     if (this.character.isDead() && !this.isDead) {

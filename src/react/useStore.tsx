@@ -22,7 +22,7 @@ const storeFunction = (
   get: GetState<Store>,
 ): Store => ({
   playerVelocity: [0, 0],
-  playerHealth: 5,
+  playerHealth: 6,
   enemyHealth: 0,
   blocked: {},
   debug: false,
