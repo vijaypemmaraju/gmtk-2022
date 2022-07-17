@@ -1,4 +1,3 @@
-import { ManOutlined } from '@mui/icons-material';
 import Phaser from 'phaser';
 import Enemy from '../actors/characters/Enemy';
 import Collision from '../actors/Collision';
@@ -30,7 +29,7 @@ export default class Main extends Phaser.Scene {
 
   create() {
     const music = this.sound.add('music', {
-      volume: 0.5,
+      volume: 0.25,
       loop: true,
     });
     music.play();
@@ -64,11 +63,12 @@ export default class Main extends Phaser.Scene {
         matterBody.setCollisionCategory(Collision.COLLISION_CATEGORIES.Map);
         matterBody.setCollidesWith(Collision.COLLISION_MASKS.Map);
       });
-    this.matter.world.createDebugGraphic();
+    // this.matter.world.createDebugGraphic();
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
   }
 
   update(time: number, delta: number): void {
+    this.cameras.main.zoom = window.innerWidth / 1280;
     this.playerController.update(time, delta, this);
     this.projectileManager.update(time, delta, this);
     this.enemyController.update(time, delta, this);

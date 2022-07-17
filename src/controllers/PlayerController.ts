@@ -1,6 +1,7 @@
 import PlayerCharacter from '../actors/characters/PlayerCharacter';
 import Collision from '../actors/Collision';
 import InputManager from '../managers/InputManager';
+import SoundManager from '../managers/SoundManager';
 import useStore from '../react/useStore';
 
 const PlayerStats = {
@@ -36,6 +37,10 @@ export default class PlayerController {
 
   character: PlayerCharacter;
 
+  particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+
+  explosionEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+
   colliders: {
     body?: MatterJS.BodyType;
     bottom?: MatterJS.BodyType;
@@ -60,6 +65,8 @@ export default class PlayerController {
   xVelocity = 0;
 
   hasDoubleJumped = false;
+
+  isDead = false;
 
   frames: string[];
 
@@ -272,6 +279,28 @@ export default class PlayerController {
     this.sprite.setFixedRotation();
     this.sprite.setPosition(400, 400);
 
+    this.particles = scene.add.particles('particle', 0);
+    const explosionEmitter = this.particles.createEmitter({
+      x: this.sprite.x,
+      y: this.sprite.y,
+      // angle: this.sprite.rotation,
+      // speed: { min: -100, max: 100 },
+      lifespan: 100,
+      quantity: 1,
+      scale: { start: 0.5, end: 0 },
+      frame: [0, 1, 2, 3],
+      blendMode: 'ADD',
+      speedY: -10,
+      emitZone: {
+        type: 'random',
+        /* @ts-ignore */
+        source: new Phaser.Geom.Circle(0, 0, 4),
+      },
+      alpha: { start: 1, end: 0 },
+    });
+    explosionEmitter.stop();
+    this.explosionEmitter = explosionEmitter;
+
     scene.matter.world.on('beforeupdate', event => {
       this.numTouching.left = 0;
       this.numTouching.right = 0;
@@ -325,11 +354,25 @@ export default class PlayerController {
     });
   }
 
+  playSwitchWeaponSound() {
+    SoundManager.play('weapon_switch', 0.1, 1);
+  }
+
   update(time: number, delta: number, scene: Phaser.Scene) {
     // #region Movement
     const isDodging =
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
     this.character.setInvincibility(isDodging);
+
+    if (this.character.isDead() && !this.isDead) {
+      this.isDead = true;
+      this.explosionEmitter.explode(100, this.sprite.x, this.sprite.y);
+      this.sprite.destroy();
+    }
+
+    if (this.isDead) {
+      return;
+    }
 
     const targetVelocity = InputManager.getXAxis() * PlayerStats.maxVelocity;
 
@@ -359,6 +402,7 @@ export default class PlayerController {
         const oldNumber = this.currentDieNumber;
         this.currentDieNumber = newNumber;
         const newNeighbors = this.dieNumberNeighbors[newNumber];
+        this.playSwitchWeaponSound();
         this.currentDieNeighbors = rotateArray(
           newNeighbors,
           newNeighbors.findIndex(n => n === oldNumber) +
@@ -437,6 +481,7 @@ export default class PlayerController {
         const oldNumber = this.currentDieNumber;
         this.currentDieNumber = newNumber;
         const newNeighbors: number[] = this.dieNumberNeighbors[newNumber];
+        this.playSwitchWeaponSound();
         this.currentDieNeighbors = rotateArray(
           newNeighbors,
           newNeighbors.findIndex(n => n === oldNumber) + 1,
@@ -462,6 +507,7 @@ export default class PlayerController {
         this.sprite.body.velocity.y,
       ],
       blocked: this.blocked,
+      currentDieNumber: this.currentDieNumber,
     });
     // #endregion
 

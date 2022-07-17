@@ -61,7 +61,10 @@ export default class EnemyController {
         this.enemy.sprite.setVelocity(newVelocity.x, newVelocity.y);
       }
 
-      if (this.enemy.equippedWeapon.canFire(time)) {
+      if (
+        this.enemy.equippedWeapon.canFire(time) &&
+        scene.playerController.sprite?.active
+      ) {
         const firePosition = new Phaser.Math.Vector2(
           this.enemy.sprite.x,
           this.enemy.sprite.y,

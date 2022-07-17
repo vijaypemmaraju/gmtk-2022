@@ -11,6 +11,12 @@ export default class Preloader {
     Enemy.preload(scene);
     ProjectileManager.preload(scene);
     SoundManager.preload(scene);
+    scene.load.image('die1', 'assets/sprites/dieFaces1.png');
+    scene.load.image('die2', 'assets/sprites/dieFaces2.png');
+    scene.load.image('die3', 'assets/sprites/dieFaces3.png');
+    scene.load.image('die4', 'assets/sprites/dieFaces4.png');
+    scene.load.image('die5', 'assets/sprites/dieFaces5.png');
+    scene.load.image('die6', 'assets/sprites/dieFaces6.png');
     scene.load.audio('music', 'assets/music/theme.mp3');
     scene.load.spritesheet('particle', 'assets/sprites/explosion.png', {
       frameWidth: 128,
