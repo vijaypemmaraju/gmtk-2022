@@ -13,7 +13,6 @@ export default class ProjectileManager {
         ) {
           return;
         }
-        console.log('collision');
         projectile.onHit();
         scene.cameras.main.shake(50, 0.0025, false);
         projectile.destroy();
