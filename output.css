@@ -1390,8 +1390,8 @@ body[dir="rtl"] .checkbox:checked,
   width: 100vw;
 }
 
-.w-\[13\%\] {
-  width: 13%;
+.w-\[340px\] {
+  width: 340px;
 }
 
 .w-full {
