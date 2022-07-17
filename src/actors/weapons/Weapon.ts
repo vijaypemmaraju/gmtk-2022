@@ -26,6 +26,8 @@ export default abstract class Weapon {
     scene: Phaser.Scene,
   );
 
+  protected playFireFx(): void {}
+
   fire(
     position: Phaser.Math.Vector2,
     aim: Phaser.Math.Vector2,
@@ -33,6 +35,7 @@ export default abstract class Weapon {
     scene: Phaser.Scene,
   ): void {
     this.instantiateProjectiles(position, aim, time, scene);
+    this.playFireFx();
     this.lastFireTime = time;
   }
 }
