@@ -1,4 +1,5 @@
 import ProjectileManager from '../../managers/ProjectileManager';
+import SoundManager from '../../managers/SoundManager';
 import Collision from '../Collision';
 
 export type ProjectileStats = {
@@ -101,6 +102,7 @@ export default abstract class Projectile {
 
   protected explode(): void {
     this.explosionEmitter.explode(1, this.sprite.x, this.sprite.y);
+    SoundManager.play('explosion', Phaser.Math.FloatBetween(0.25, 0.35), 2);
   }
 
   applyDamage(body: MatterJS.BodyType): void {

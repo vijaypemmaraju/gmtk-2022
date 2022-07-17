@@ -1,3 +1,4 @@
+import SoundManager from '../../../../managers/SoundManager';
 import Weapon, { WeaponStats } from '../../Weapon';
 
 export type MultiFireWeaponStats = WeaponStats & {
@@ -15,6 +16,7 @@ export default abstract class MultiFireWeapon extends Weapon {
   ) {
     for (let i = 0; i < this.stats.projectilesPerShot; i += 1) {
       const newProjectile = new this.EquippedProjectileClass();
+      SoundManager.play('shoot');
       newProjectile.instantiate(
         position.add(
           new Phaser.Math.Vector2(
