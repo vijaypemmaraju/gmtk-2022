@@ -20,6 +20,8 @@ export default abstract class Projectile {
 
   explosionEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
+  hasExploded: boolean = false;
+
   protected createSprite(
     position: Phaser.Math.Vector2,
     scene: Phaser.Scene,
@@ -82,6 +84,9 @@ export default abstract class Projectile {
     this.direction = direction.clone().scale(this.stats.speed);
     this.sprite = this.createSprite(position, scene);
     this.explosionEmitter = this.createExplosionEmitter(scene);
+    this.sprite.on('collide', (_a, _b, { bodyA, bodyB }) => {
+      this.onHit(bodyA === this.sprite.body ? bodyB : bodyA);
+    });
     ProjectileManager.addProjectile(this);
   }
 
@@ -99,7 +104,7 @@ export default abstract class Projectile {
     this.moveProjectile(time, delta, scene);
   }
 
-  protected explode(): void {
+  protected playExplodeEffects(): void {
     this.explosionEmitter.explode(1, this.sprite.x, this.sprite.y);
   }
 
@@ -113,13 +118,19 @@ export default abstract class Projectile {
     }
   }
 
-  onHit(body: MatterJS.BodyType): void {
-    this.explode();
+  protected explode(): void {
+    this.playExplodeEffects();
+    this.hasExploded = true;
+  }
+
+  protected onHit(body: MatterJS.BodyType): void {
     this.applyDamage(body);
+    this.explode();
   }
 
   shouldBeDestroyed(): boolean {
     return (
+      this.hasExploded ||
       this.sprite.x < -this.sprite.width ||
       this.sprite.x > 1280 + this.sprite.width ||
       this.sprite.y < -this.sprite.height ||

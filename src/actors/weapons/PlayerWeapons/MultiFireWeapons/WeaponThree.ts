@@ -1,5 +1,5 @@
-import PlayerBullet from '../../PlayerProjectiles/PlayerBullet';
-import { IProjectile } from '../../Projectile';
+import PlayerBullet from '../../../projectiles/PlayerProjectiles/PlayerBullet';
+import { IProjectile } from '../../../projectiles/Projectile';
 import MultiFireWeapon, { MultiFireWeaponStats } from './MultiFireWeapon';
 
 const WeaponThreeStats: MultiFireWeaponStats = {

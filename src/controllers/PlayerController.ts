@@ -329,6 +329,7 @@ export default class PlayerController {
     // #region Movement
     const isDodging =
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
+    this.character.setInvincibility(isDodging);
 
     const targetVelocity = InputManager.getXAxis() * PlayerStats.maxVelocity;
 

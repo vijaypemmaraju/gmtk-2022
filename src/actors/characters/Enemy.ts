@@ -1,6 +1,7 @@
 import useStore from '../../react/useStore';
 import Collision from '../Collision';
-import SimpleGun from '../weapons/EnemyWeapons/SimpleGun';
+import EnemyShotgun from '../weapons/EnemyWeapons/EnemyShotgun';
+import SimpleGun from '../weapons/SimpleGun';
 
 const EnemyStats = {
   maxHealth: 1000,
@@ -15,7 +16,7 @@ export default class Enemy {
 
   health = EnemyStats.maxHealth;
 
-  equippedWeapon = new SimpleGun();
+  equippedWeapon = new EnemyShotgun();
 
   static preload(scene: Phaser.Scene) {
     scene.load.atlas('d4', 'assets/sprites/d4.png', 'assets/sprites/d4.json');
