@@ -10,6 +10,10 @@ export default class ProjectileManager {
     ProjectileManager.scene = scene;
   }
 
+  static preload(scene: Phaser.Scene) {
+    scene.load.image('bullet', 'assets/sprites/bullet.png');
+  }
+
   static addProjectile(projectile: Projectile) {
     ProjectileManager.projectiles.push(projectile);
     projectile.sprite.on('collide', (_a, _b, { bodyA, bodyB }) => {
@@ -33,6 +37,10 @@ export default class ProjectileManager {
 
   static applyEnemyDamage(damage: number) {
     ProjectileManager.scene.enemyController.enemy.hit(damage);
+  }
+
+  static applyPlayerDamage(damage: number) {
+    console.log(`Player hit! ${damage}`);
   }
 
   update(time: number, delta: number, scene: Phaser.Scene) {

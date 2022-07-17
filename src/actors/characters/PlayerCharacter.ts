@@ -1,9 +1,9 @@
-import WeaponFive from '../weapons/PlayerWeapons/WeaponFive/WeaponFive';
-import WeaponFour from '../weapons/PlayerWeapons/WeaponFour/WeaponFour';
-import WeaponOne from '../weapons/PlayerWeapons/WeaponOne/WeaponOne';
-import WeaponSix from '../weapons/PlayerWeapons/WeaponSix/WeaponSix';
-import WeaponThree from '../weapons/PlayerWeapons/WeaponThree/WeaponThree';
-import WeaponTwo from '../weapons/PlayerWeapons/WeaponTwo/WeaponTwo';
+import WeaponFive from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponFive';
+import WeaponFour from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponFour';
+import WeaponOne from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponOne';
+import WeaponSix from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponSix';
+import WeaponThree from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponThree';
+import WeaponTwo from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponTwo';
 import Weapon from '../weapons/Weapon';
 
 export default class PlayerCharacter {
