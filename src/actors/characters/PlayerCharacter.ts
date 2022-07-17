@@ -32,16 +32,22 @@ export default class PlayerCharacter {
 
   isInvincible = false;
 
+  wasJustHit = false;
+
   getEquippedWeapon(): Weapon {
     return this.inventory[this.equippedSlot];
   }
 
   hit(damage: number): boolean {
-    if (this.isInvincible) {
+    if (this.isInvincible || this.wasJustHit) {
       return false;
     }
     this.health -= damage;
     this.health = Math.max(0, this.health);
+    this.wasJustHit = true;
+    setTimeout(() => {
+      this.wasJustHit = false;
+    }, 1000);
     SoundManager.play('hurt', 0.5);
 
     useStore.setState({
