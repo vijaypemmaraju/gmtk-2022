@@ -8,6 +8,7 @@ type Store = {
   blocked: {
     [key: string]: boolean;
   };
+  debug: boolean;
 };
 const storeFunction = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,6 +20,7 @@ const storeFunction = (
   playerHealth: 5,
   enemyHealth: 0,
   blocked: {},
+  debug: false,
 });
 // eslint-disable-next-line import/prefer-default-export
 
