@@ -42,7 +42,6 @@ export default class Main extends Phaser.Scene {
 
     this.matter.world.createDebugGraphic();
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-    this.cameras.main.startFollow(this.enemyController.enemy.sprite);
   }
 
   update(time: number, delta: number): void {
