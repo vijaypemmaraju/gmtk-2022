@@ -216,8 +216,6 @@ export default class PlayerController {
   }
 
   update(time: number, delta: number, scene: Phaser.Scene) {
-    this.sprite.setTexture('player', `dieRed${this.currentDieNumber}`);
-
     // #region Movement
     const isDodging =
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;

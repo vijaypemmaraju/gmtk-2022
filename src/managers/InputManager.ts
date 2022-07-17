@@ -57,6 +57,9 @@ export default class InputManager {
   }
 
   static getAim(): Phaser.Math.Vector2 {
-    return InputManager.pointer.position;
+    return new Phaser.Math.Vector2(
+      InputManager.pointer.worldX,
+      InputManager.pointer.worldY,
+    );
   }
 }

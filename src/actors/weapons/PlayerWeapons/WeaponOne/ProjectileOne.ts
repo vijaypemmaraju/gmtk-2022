@@ -2,7 +2,7 @@ import ProjectileManager from '../../../../managers/ProjectileManager';
 import Projectile from '../../Projectile';
 
 const ProjectileOneStats = {
-  speed: 0.1,
+  speed: 5,
 };
 
 export default class ProjectileOne implements Projectile {
@@ -19,7 +19,7 @@ export default class ProjectileOne implements Projectile {
     direction: Phaser.Math.Vector2,
     scene: Phaser.Scene,
   ) {
-    this.direction = direction;
+    this.direction = direction.clone().scale(ProjectileOneStats.speed);
 
     this.sprite = scene.matter.add.sprite(
       position.x,
@@ -38,7 +38,7 @@ export default class ProjectileOne implements Projectile {
   }
 
   update(): void {
-    const velocity = this.direction.scale(ProjectileOneStats.speed);
+    const velocity = this.direction;
     this.sprite.setVelocity(velocity.x, velocity.y);
   }
 
