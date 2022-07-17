@@ -9,8 +9,8 @@ let game: Phaser.Game | null = null;
 game = new Phaser.Game({
   type: Phaser.WEBGL,
   backgroundColor: '#125555',
-  width: 1280,
-  height: 720,
+  width: window.innerWidth,
+  height: window.innerHeight,
   scene: [Main, UI],
   pixelArt: true,
   physics: {
@@ -21,4 +21,7 @@ game = new Phaser.Game({
   },
 });
 
+window.addEventListener('resize', () => {
+  game?.scale.resize(window.innerWidth, window.innerHeight);
+});
 export default game;

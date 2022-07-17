@@ -23,6 +23,7 @@ const UI: FC = () => {
           bottom: {blocked.bottom ? 'Yes' : 'No'}
         </div>
       </div>
+      <div className="stat-title">Player Health</div>
       <div className="flex">
         {Array.from({ length: playerHealth }).map((_, i) => (
           <img key={i} src="assets/sprites/die.png" alt="player" />

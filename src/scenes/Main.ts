@@ -69,6 +69,7 @@ export default class Main extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
+    this.cameras.main.zoom = window.innerWidth / 1280;
     this.playerController.update(time, delta, this);
     this.projectileManager.update(time, delta, this);
     this.enemyController.update(time, delta, this);

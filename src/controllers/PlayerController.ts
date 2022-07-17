@@ -36,6 +36,10 @@ export default class PlayerController {
 
   character: PlayerCharacter;
 
+  particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+
+  explosionEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+
   colliders: {
     body?: MatterJS.BodyType;
     bottom?: MatterJS.BodyType;
@@ -60,6 +64,8 @@ export default class PlayerController {
   xVelocity = 0;
 
   hasDoubleJumped = false;
+
+  isDead = false;
 
   frames: string[];
 
@@ -272,6 +278,28 @@ export default class PlayerController {
     this.sprite.setFixedRotation();
     this.sprite.setPosition(400, 400);
 
+    this.particles = scene.add.particles('particle', 0);
+    const explosionEmitter = this.particles.createEmitter({
+      x: this.sprite.x,
+      y: this.sprite.y,
+      // angle: this.sprite.rotation,
+      // speed: { min: -100, max: 100 },
+      lifespan: 100,
+      quantity: 1,
+      scale: { start: 0.5, end: 0 },
+      frame: [0, 1, 2, 3],
+      blendMode: 'ADD',
+      speedY: -10,
+      emitZone: {
+        type: 'random',
+        /* @ts-ignore */
+        source: new Phaser.Geom.Circle(0, 0, 4),
+      },
+      alpha: { start: 1, end: 0 },
+    });
+    explosionEmitter.stop();
+    this.explosionEmitter = explosionEmitter;
+
     scene.matter.world.on('beforeupdate', event => {
       this.numTouching.left = 0;
       this.numTouching.right = 0;
@@ -330,6 +358,16 @@ export default class PlayerController {
     const isDodging =
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
     this.character.setInvincibility(isDodging);
+
+    if (this.character.isDead() && !this.isDead) {
+      this.isDead = true;
+      this.explosionEmitter.explode(100, this.sprite.x, this.sprite.y);
+      this.sprite.destroy();
+    }
+
+    if (this.isDead) {
+      return;
+    }
 
     const targetVelocity = InputManager.getXAxis() * PlayerStats.maxVelocity;
 
