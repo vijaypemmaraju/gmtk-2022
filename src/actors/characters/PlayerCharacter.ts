@@ -9,7 +9,7 @@ import PlayerShotgun from '../weapons/PlayerWeapons/PlayerShotgun';
 import Weapon from '../weapons/Weapon';
 
 export const PlayerStats = {
-  maxHealth: 5,
+  maxHealth: 6,
 };
 
 export default class PlayerCharacter {

@@ -2,7 +2,7 @@ import Grenade, { GrenadeStats } from '../Grenade';
 
 const PlayerGrenadeStats: GrenadeStats = {
   damage: 50,
-  startSpeed: 20,
+  startSpeed: 23,
   secondsToExplode: 1,
   damageRadius: 100,
   speed: 0,
