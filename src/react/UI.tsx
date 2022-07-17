@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { EnemyStats } from '../actors/characters/Enemy';
 import Debug from './Debug';
 import useStore from './useStore';
@@ -21,6 +21,16 @@ const UI: FC = () => {
   const blocked = useStore(store => store.blocked);
   const debug = useStore(store => store.debug);
   const currentDieNumber = useStore(store => store.currentDieNumber);
+  const isDead = useStore(store => store.isDead);
+
+  const modalToggleRef = React.useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (isDead) {
+      modalToggleRef.current!.checked = true;
+    }
+  });
+
   return (
     <div className="w-[100vw] h-[100vh]">
       {debug && <Debug />}
@@ -42,6 +52,27 @@ const UI: FC = () => {
           {Array.from({ length: playerHealth }).map((_, i) => (
             <img key={i} src="assets/sprites/dieFaces1.png" alt="player" />
           ))}
+        </div>
+      </div>
+      <input
+        type="checkbox"
+        id="my-modal"
+        className="modal-toggle"
+        ref={modalToggleRef}
+      />
+      <div className="modal">
+        <div className="modal-box">
+          <h3 className="text-lg font-bold">Ouch...</h3>
+          <p className="py-4">That looked like it hurt.</p>
+          <div className="modal-action">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => location.reload()}
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -368,6 +368,7 @@ export default class PlayerController {
       this.isDead = true;
       this.explosionEmitter.explode(100, this.sprite.x, this.sprite.y);
       this.sprite.destroy();
+      useStore.setState({ isDead: true });
     }
 
     if (this.isDead) {
