@@ -1,4 +1,5 @@
 export default interface Projectile {
+  sprite: Phaser.GameObjects.Sprite;
   instantiate(
     position: Phaser.Math.Vector2,
     direction: Phaser.Math.Vector2,

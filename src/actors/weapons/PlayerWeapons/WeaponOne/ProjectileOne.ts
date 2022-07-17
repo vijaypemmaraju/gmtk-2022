@@ -28,9 +28,6 @@ export default class ProjectileOne implements Projectile {
       undefined,
       {
         ignoreGravity: true,
-        collisionFilter: {
-          mask: 0,
-        },
       },
     );
 

@@ -5,6 +5,16 @@ export default class ProjectileManager {
 
   static addProjectile(projectile: Projectile) {
     ProjectileManager.projectiles.push(projectile);
+    projectile.sprite.on('collide', (_a, _b, { bodyA, bodyB }) => {
+      if (!bodyA.label.includes('player') && !bodyB.label.includes('player')) {
+        projectile.onHit();
+        projectile.destroy();
+        ProjectileManager.projectiles.splice(
+          ProjectileManager.projectiles.indexOf(projectile),
+          1,
+        );
+      }
+    });
   }
 
   update(time: number, delta: number, scene: Phaser.Scene) {

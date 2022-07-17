@@ -93,6 +93,7 @@ export default class PlayerController {
   create(scene: Phaser.Scene) {
     this.scene = scene;
     this.sprite = scene.matter.add.sprite(0, 0, 'player', 6);
+    (this.sprite.body as MatterJS.BodyType).label = 'player';
     this.frames = scene.textures.get('player').getFrameNames();
     scene.anims.create({
       key: 'dodge-roll',
@@ -125,6 +126,7 @@ export default class PlayerController {
         // chamfer: { radius: 10 },
       },
     );
+    (this.colliders.body as MatterJS.BodyType).label = 'playerBody';
     this.colliders.bottom = scene.matter.bodies.rectangle(sx, height, sx, 5, {
       isSensor: true,
     });
@@ -137,6 +139,7 @@ export default class PlayerController {
         isSensor: true,
       },
     );
+    (this.colliders.left as MatterJS.BodyType).label = 'playerLeft';
     this.colliders.right = scene.matter.bodies.rectangle(
       sx + width * 0.25,
       sy,
@@ -146,6 +149,7 @@ export default class PlayerController {
         isSensor: true,
       },
     );
+    (this.colliders.right as MatterJS.BodyType).label = 'playerRight';
 
     const compoundBody = scene.matter.body.create({
       parts: [
@@ -157,6 +161,7 @@ export default class PlayerController {
       restitution: 0.05, // Prevent body from sticking against a wall
       friction: 0.01,
     });
+    (compoundBody as MatterJS.BodyType).label = 'playerCompound';
 
     this.sprite.setExistingBody(compoundBody);
     this.sprite.setFixedRotation();
