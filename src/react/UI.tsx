@@ -35,6 +35,9 @@ const UI: FC = () => {
       {gameState === 'Menu' && (
         <div className="flex flex-col w-[100vw] h-[100vh] items-center justify-center">
           <h1 className="pb-4 text-5xl">The Last D6</h1>
+          <h4 className="pb-4 text-xl">
+            A lone die, the last of his kind, fights for the future of his race.
+          </h4>
           <button
             type="button"
             className="pointer-events-auto btn btn-primary"
@@ -97,7 +100,7 @@ const UI: FC = () => {
                     style={{ width: 40 }}
                   />
                 </div>
-                <div className="text-lg stat-desc">
+                <div className="text-2xl stat-desc">
                   {WEAPON_NAMES[currentDieNumber]}
                 </div>
               </div>
@@ -138,7 +141,7 @@ const UI: FC = () => {
               {isDead && (
                 <>
                   <h3 className="text-lg font-bold">Ouch...</h3>
-                  <p className="py-4">That looked like it hurt.</p>
+                  <p className="py-4">Better luck next time.</p>
                   <div className="modal-action">
                     <button
                       type="button"
