@@ -10,5 +10,7 @@ const PlayerGrenadeStats: GrenadeStats = {
 };
 
 export default class PlayerGrenade extends Grenade {
+  textureKey: string = 'player-bullet';
+
   stats = PlayerGrenadeStats;
 }

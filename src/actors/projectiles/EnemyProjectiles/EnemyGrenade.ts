@@ -10,5 +10,7 @@ const EnemyGrenadeStats: GrenadeStats = {
 };
 
 export default class EnemyGrenade extends Grenade {
+  textureKey: string = 'enemy-bullet';
+
   stats = EnemyGrenadeStats;
 }

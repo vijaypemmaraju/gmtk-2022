@@ -8,5 +8,7 @@ const EnemyHomingMissleStats: HomingProjectileStats = {
 };
 
 export default class EnemyHomingMissle extends HomingProjectile {
+  textureKey: string = 'enemy-bullet';
+
   stats = EnemyHomingMissleStats;
 }
