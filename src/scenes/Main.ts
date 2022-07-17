@@ -29,6 +29,11 @@ export default class Main extends Phaser.Scene {
   }
 
   create() {
+    const music = this.sound.add('music', {
+      volume: 0.5,
+      loop: true,
+    });
+    music.play();
     this.inputManager = new InputManager(this);
     this.projectileManager = new ProjectileManager(this);
     this.playerController = new PlayerController();

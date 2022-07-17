@@ -11,6 +11,7 @@ export default class Preloader {
     Enemy.preload(scene);
     ProjectileManager.preload(scene);
     SoundManager.preload(scene);
+    scene.load.audio('music', 'assets/music/theme.mp3');
     scene.load.spritesheet('particle', 'assets/sprites/explosion.png', {
       frameWidth: 128,
       frameHeight: 128,
