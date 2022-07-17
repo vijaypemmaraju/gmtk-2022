@@ -12,6 +12,11 @@ export default class ProjectileManager {
 
   static preload(scene: Phaser.Scene) {
     scene.load.image('player-bullet', 'assets/textures/player-bullet.png');
+    scene.load.image('player-grenade', 'assets/textures/player-grenade.png');
+    scene.load.image(
+      'player-homing-missile',
+      'assets/textures/player-homing-missile.png',
+    );
     scene.load.image('enemy-bullet', 'assets/textures/enemy-bullet.png');
   }
 
