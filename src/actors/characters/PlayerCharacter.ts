@@ -1,3 +1,4 @@
+import SoundManager from '../../managers/SoundManager';
 import useStore from '../../react/useStore';
 import WeaponFive from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponFive';
 import WeaponFour from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponFour';
@@ -41,6 +42,7 @@ export default class PlayerCharacter {
     }
     this.health -= damage;
     this.health = Math.max(0, this.health);
+    SoundManager.play('hurt', 0.5);
 
     useStore.setState({
       playerHealth: this.health,

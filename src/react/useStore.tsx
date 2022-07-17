@@ -1,5 +1,7 @@
 import create, { GetState, SetState } from 'zustand';
 
+export type GameState = 'Menu' | 'Game';
+
 type Store = {
   playerVelocity: number[];
   playerHealth: number;
@@ -11,6 +13,7 @@ type Store = {
   currentDieNumber: number;
   isDead: boolean;
   hasWon: boolean;
+  gameState: GameState;
 };
 const storeFunction = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,6 +29,7 @@ const storeFunction = (
   currentDieNumber: 1,
   isDead: false,
   hasWon: false,
+  gameState: 'Menu',
 });
 // eslint-disable-next-line import/prefer-default-export
 
