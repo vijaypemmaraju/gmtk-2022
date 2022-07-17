@@ -3,7 +3,7 @@ import Collision from '../Collision';
 import EnemyShotgun from '../weapons/EnemyWeapons/EnemyShotgun';
 import SimpleGun from '../weapons/SimpleGun';
 
-const EnemyStats = {
+export const EnemyStats = {
   maxHealth: 1000,
 };
 

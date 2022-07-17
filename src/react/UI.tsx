@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { EnemyStats } from '../actors/characters/Enemy';
 import Debug from './Debug';
 import useStore from './useStore';
 
@@ -24,11 +25,24 @@ const UI: FC = () => {
     <div className="w-[100vw] h-[100vh]">
       {debug && <Debug />}
       <div
-        className="p-6 w-[25%] flex"
+        className="w-full h-5 bg-red-800"
+        style={{ width: `${(enemyHealth / EnemyStats.maxHealth) * 100}%` }}
+      />
+      <div
+        className="p-6 w-[25%]"
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
       >
-        <img src={`assets/sprites/dieFaces${currentDieNumber}.png`} alt="" />
-        <h6 className="pl-2">{WEAPON_NAMES[currentDieNumber]}</h6>
+        <h4>Weapon</h4>
+        <div className="flex">
+          <img src={`assets/sprites/dieFaces${currentDieNumber}.png`} alt="" />
+          <h6 className="pl-2">{WEAPON_NAMES[currentDieNumber]}</h6>
+        </div>
+        <h4>Health</h4>
+        <div className="flex">
+          {Array.from({ length: playerHealth }).map((_, i) => (
+            <img key={i} src="assets/sprites/dieFaces1.png" alt="player" />
+          ))}
+        </div>
       </div>
     </div>
   );

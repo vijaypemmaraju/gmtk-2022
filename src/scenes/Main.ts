@@ -1,4 +1,3 @@
-import { ManOutlined } from '@mui/icons-material';
 import Phaser from 'phaser';
 import Enemy from '../actors/characters/Enemy';
 import Collision from '../actors/Collision';
@@ -33,7 +32,7 @@ export default class Main extends Phaser.Scene {
       volume: 0.25,
       loop: true,
     });
-    // music.play();
+    music.play();
     this.inputManager = new InputManager(this);
     this.projectileManager = new ProjectileManager(this);
     this.playerController = new PlayerController();

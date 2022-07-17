@@ -1,5 +1,4 @@
 import create, { GetState, SetState } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 type Store = {
   playerVelocity: number[];
@@ -26,10 +25,6 @@ const storeFunction = (
 });
 // eslint-disable-next-line import/prefer-default-export
 
-const useStore = create<Store>(
-  persist((set, get) => storeFunction(set, get), {
-    name: 'store',
-  }),
-);
+const useStore = create<Store>(storeFunction);
 
 export default useStore;
