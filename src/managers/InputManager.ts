@@ -6,6 +6,8 @@ const InputConfig = {
   left: Phaser.Input.Keyboard.KeyCodes.A,
   leftAlt: Phaser.Input.Keyboard.KeyCodes.LEFT,
   jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
+  jumpAlt: Phaser.Input.Keyboard.KeyCodes.W,
+  jumpAlt2: Phaser.Input.Keyboard.KeyCodes.UP,
   dodge: Phaser.Input.Keyboard.KeyCodes.SHIFT,
 };
 
@@ -41,11 +43,19 @@ export default class InputManager {
   }
 
   static getJump(): boolean {
-    return InputManager.keys.jump.isDown;
+    return (
+      InputManager.keys.jump.isDown ||
+      InputManager.keys.jumpAlt.isDown ||
+      InputManager.keys.jumpAlt2.isDown
+    );
   }
 
   static getJustJumped(): boolean {
-    return Phaser.Input.Keyboard.JustDown(InputManager.keys.jump);
+    return (
+      Phaser.Input.Keyboard.JustDown(InputManager.keys.jump) ||
+      Phaser.Input.Keyboard.JustDown(InputManager.keys.jumpAlt) ||
+      Phaser.Input.Keyboard.JustDown(InputManager.keys.jumpAlt2)
+    );
   }
 
   static getDodge(): boolean {

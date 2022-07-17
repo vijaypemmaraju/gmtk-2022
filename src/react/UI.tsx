@@ -42,6 +42,43 @@ const UI: FC = () => {
           >
             Start Game
           </button>
+          <div className="divider" />
+          <h1 className="py-4 text-3xl">Controls</h1>
+          <div className="flex flex-wrap gap-8 w-[50vw]">
+            <div className="p-3 border border-gray-900 rounded-xl bg-base-100">
+              <h2 className="py-4 text-2xl">Movement</h2>
+              <div className="flex gap-3 py-1">
+                <kbd className="kbd">A</kbd>
+                <kbd className="kbd">D</kbd>
+              </div>
+              <div className="flex gap-3 py-1">
+                <kbd className="kbd">←</kbd>
+                <kbd className="kbd">→</kbd>
+              </div>
+            </div>
+            <div className="p-3 border border-gray-900 rounded-xl bg-base-100">
+              <h2 className="py-4 text-2xl">Jump / Double Jump</h2>
+              <kbd className="m-1 kbd">W</kbd>
+              <kbd className="m-1 kbd">↑</kbd>
+              <kbd className="m-1 kbd">Space</kbd>
+            </div>
+            <div className="p-3 border border-gray-900 rounded-xl bg-base-100">
+              <h2 className="py-4 text-2xl">Dodge Roll</h2>
+              <kbd className="my-1 kbd">Shift</kbd>
+            </div>
+            <div className="p-3 border border-gray-900 rounded-xl bg-base-100">
+              <h2 className="py-4 text-2xl">Fire Weapon</h2>
+              <img src="assets/sprites/leftMouse.png" alt="" />
+              <h2 className="py-4 text-base">(Left Mouse Click)</h2>
+            </div>
+            <div className="p-3 border border-gray-900 rounded-xl bg-base-100">
+              <h2 className="py-4 text-2xl">Switch Weapon</h2>
+              <p>
+                Weapon Switching is triggered when double-jumping or
+                dodge-rolling
+              </p>
+            </div>
+          </div>
         </div>
       )}
       {gameState === 'Game' && (
