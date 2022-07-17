@@ -116,7 +116,9 @@ const UI: FC = () => {
               {!isDead && hasWon && (
                 <div>
                   <h3 className="text-lg font-bold">You Win!</h3>
-                  <p className="py-4">You killed the enemy and won the game.</p>
+                  <p className="py-4">
+                    You have restored peace to the world of dice.
+                  </p>
                   <div className="modal-action">
                     <button
                       type="button"
