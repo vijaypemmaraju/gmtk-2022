@@ -4,7 +4,7 @@ import Enemy, { EnemyStats } from '../Enemy';
 import EnemyState from './EnemyState';
 
 export default class EnemyStateFour extends EnemyState {
-  ttlSeconds: number = 5;
+  ttlSeconds: number = 4;
 
   spline: Phaser.Curves.Spline = new Phaser.Curves.Spline([
     new Phaser.Math.Vector2(100, 600),
