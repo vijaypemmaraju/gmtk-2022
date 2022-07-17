@@ -25,7 +25,7 @@ export default abstract class HomingProjectile extends Projectile {
     const targetDirection = new Phaser.Math.Vector2(target.x, target.y)
       .subtract(new Phaser.Math.Vector2(this.sprite.x, this.sprite.y))
       .normalize();
-    const lerpValue = (1 - 1 / this.stats.homingForce) * delta;
+    const lerpValue = (1 - 1 / this.stats.homingForce) * (delta / 1000);
     this.direction = this.direction.lerp(targetDirection, lerpValue);
   }
 }

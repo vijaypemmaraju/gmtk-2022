@@ -9,7 +9,7 @@ export type GrenadeStats = ProjectileStats & {
 export default abstract class Grenade extends Projectile {
   stats: GrenadeStats;
 
-  creationTime: number = 0;
+  creationTime: number | null = null;
 
   explodeOnNextUpdate: boolean = false;
 
@@ -29,8 +29,8 @@ export default abstract class Grenade extends Projectile {
     const emitter = super.createExplosionEmitter(scene);
 
     emitter.emitZone.source = new Phaser.Geom.Circle(
-      0,
-      0,
+      -this.stats.damageRadius,
+      -this.stats.damageRadius,
       this.stats.damageRadius,
     );
 
@@ -54,6 +54,7 @@ export default abstract class Grenade extends Projectile {
       this.sprite.x + this.stats.damageRadius,
       this.sprite.y + this.stats.damageRadius,
     );
+    console.dir(hitBodies);
     for (let i = 0; i < hitBodies.length; i += 1) {
       const body = hitBodies[i] as MatterJS.BodyType;
       if (body?.label?.includes(this.stats.target)) {
@@ -71,6 +72,9 @@ export default abstract class Grenade extends Projectile {
   }
 
   update(time: number, delta: number, scene: Phaser.Scene): void {
+    if (this.creationTime === null) {
+      this.creationTime = time;
+    }
     if (
       !this.hasExploded &&
       (this.explodeOnNextUpdate ||

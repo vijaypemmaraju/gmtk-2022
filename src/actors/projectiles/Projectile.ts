@@ -95,7 +95,7 @@ export default abstract class Projectile {
     delta: number,
     scene: Phaser.Scene,
   ): void {
-    const velocity = this.direction;
+    const velocity = this.direction.clone().normalize().scale(this.stats.speed);
     this.sprite.setVelocity(velocity.x, velocity.y);
     this.sprite.rotation = this.direction.angle();
   }
