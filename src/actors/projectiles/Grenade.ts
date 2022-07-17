@@ -54,7 +54,6 @@ export default abstract class Grenade extends Projectile {
       this.sprite.x + this.stats.damageRadius,
       this.sprite.y + this.stats.damageRadius,
     );
-    console.dir(hitBodies);
     for (let i = 0; i < hitBodies.length; i += 1) {
       const body = hitBodies[i] as MatterJS.BodyType;
       if (body?.label?.includes(this.stats.target)) {

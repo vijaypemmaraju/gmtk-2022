@@ -5,6 +5,7 @@ import WeaponOne from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponOne';
 import WeaponSix from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponSix';
 import WeaponThree from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponThree';
 import WeaponTwo from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponTwo';
+import PlayerFireworkLauncher from '../weapons/PlayerWeapons/PlayerFireworkLauncher';
 import PlayerGrenadeLauncher from '../weapons/PlayerWeapons/PlayerGrenadeLauncher';
 import PlayerMissleLauncher from '../weapons/PlayerWeapons/PlayerMissleLauncher';
 import PlayerShotgun from '../weapons/PlayerWeapons/PlayerShotgun';
@@ -20,7 +21,7 @@ export default class PlayerCharacter {
     new PlayerShotgun(),
     new WeaponThree(),
     new PlayerGrenadeLauncher(),
-    new WeaponFive(),
+    new PlayerFireworkLauncher(),
     new PlayerMissleLauncher(),
   ];
 
