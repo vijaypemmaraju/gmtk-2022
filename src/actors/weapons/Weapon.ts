@@ -1,4 +1,4 @@
-import { IProjectile } from './Projectile';
+import { IProjectile } from '../projectiles/Projectile';
 
 export type WeaponStats = {
   msBetweenFires: number;

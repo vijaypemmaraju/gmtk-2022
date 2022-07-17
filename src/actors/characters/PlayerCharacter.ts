@@ -5,6 +5,9 @@ import WeaponOne from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponOne';
 import WeaponSix from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponSix';
 import WeaponThree from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponThree';
 import WeaponTwo from '../weapons/PlayerWeapons/MultiFireWeapons/WeaponTwo';
+import PlayerGrenadeLauncher from '../weapons/PlayerWeapons/PlayerGrenadeLauncher';
+import PlayerMissleLauncher from '../weapons/PlayerWeapons/PlayerMissleLauncher';
+import PlayerShotgun from '../weapons/PlayerWeapons/PlayerShotgun';
 import Weapon from '../weapons/Weapon';
 
 const PlayerStats = {
@@ -14,28 +17,39 @@ const PlayerStats = {
 export default class PlayerCharacter {
   inventory: Weapon[] = [
     new WeaponOne(),
-    new WeaponTwo(),
+    new PlayerShotgun(),
     new WeaponThree(),
-    new WeaponFour(),
+    new PlayerGrenadeLauncher(),
     new WeaponFive(),
-    new WeaponSix(),
+    new PlayerMissleLauncher(),
   ];
 
   equippedSlot = 5;
 
   health = PlayerStats.maxHealth;
 
+  isInvincible = false;
+
   getEquippedWeapon(): Weapon {
     return this.inventory[this.equippedSlot];
   }
 
-  hit(damage: number): void {
+  hit(damage: number): boolean {
+    if (this.isInvincible) {
+      return false;
+    }
     this.health -= damage;
     this.health = Math.max(0, this.health);
 
     useStore.setState({
       playerHealth: this.health,
     });
+
+    return true;
+  }
+
+  setInvincibility(isInvincible) {
+    this.isInvincible = isInvincible;
   }
 
   isDead(): boolean {

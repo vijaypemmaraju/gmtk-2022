@@ -1,4 +1,4 @@
-import Projectile from '../actors/weapons/Projectile';
+import Projectile from '../actors/projectiles/Projectile';
 import Main from '../scenes/Main';
 
 export default class ProjectileManager {
@@ -17,24 +17,19 @@ export default class ProjectileManager {
 
   static addProjectile(projectile: Projectile) {
     ProjectileManager.projectiles.push(projectile);
-    projectile.sprite.on('collide', (_a, _b, { bodyA, bodyB }) => {
-      projectile.onHit(bodyA === projectile.sprite.body ? bodyB : bodyA);
-      projectile.destroy();
-      ProjectileManager.projectiles.splice(
-        ProjectileManager.projectiles.indexOf(projectile),
-        1,
-      );
-    });
   }
 
   static applyEnemyDamage(damage: number) {
     ProjectileManager.scene.enemyController.enemy.hit(damage);
-    ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
+    // ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
   }
 
   static applyPlayerDamage(damage: number) {
-    ProjectileManager.scene.playerController.character.hit(damage);
-    ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
+    const wasHit =
+      ProjectileManager.scene.playerController.character.hit(damage);
+    if (wasHit) {
+      ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
+    }
   }
 
   update(time: number, delta: number, scene: Phaser.Scene) {
