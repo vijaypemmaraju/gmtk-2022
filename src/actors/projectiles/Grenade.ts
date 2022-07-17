@@ -13,6 +13,8 @@ export default abstract class Grenade extends Projectile {
 
   explodeOnNextUpdate: boolean = false;
 
+  lastPosition: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
+
   protected createSprite(
     position: Phaser.Math.Vector2,
     scene: Phaser.Scene,
@@ -70,7 +72,23 @@ export default abstract class Grenade extends Projectile {
     }
   }
 
+  protected moveProjectile(): void {
+    const currentPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
+      this.sprite.x,
+      this.sprite.y,
+    );
+    const dirAngle = this.lastPosition
+      .subtract(currentPosition)
+      .normalize()
+      .rotate(Math.PI)
+      .angle();
+    this.sprite.setRotation(dirAngle);
+    this.lastPosition = currentPosition;
+  }
+
   update(time: number, delta: number, scene: Phaser.Scene): void {
+    super.update(time, delta, scene);
+
     if (this.creationTime === null) {
       this.creationTime = time;
     }

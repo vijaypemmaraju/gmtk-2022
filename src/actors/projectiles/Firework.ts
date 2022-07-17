@@ -17,7 +17,18 @@ export default abstract class Firework extends SpawnProjectile {
     return sprite;
   }
 
-  protected moveProjectile(): void {}
+  protected moveProjectile(): void {
+    const currentPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
+      this.sprite.x,
+      this.sprite.y,
+    );
+    const dirAngle = this.lastPosition
+      .subtract(currentPosition)
+      .normalize()
+      .rotate(Math.PI)
+      .angle();
+    this.sprite.setRotation(dirAngle);
+  }
 
   instantiate(
     position: Phaser.Math.Vector2,
