@@ -31,11 +31,25 @@ export default class EnemyController {
     // => 'inactive'
 
     setInterval(() => {
-      const nextStates = [1, 2, 3, 4]
+      const availableStates = [1];
+      if (enemy.health <= 750) {
+        availableStates.push(2);
+      }
+      if (enemy.health <= 500) {
+        availableStates.push(3);
+      }
+      if (enemy.health <= 250) {
+        availableStates.push(4);
+      }
+      const nextStates = availableStates
         .map(a => a.toString())
         .filter(a => a !== this.currentState);
       const nextState =
         nextStates[Phaser.Math.Between(0, nextStates.length - 1)];
+
+      if (nextState === this.currentState || !nextState) {
+        return;
+      }
       toggleService.send(nextState);
       this.enemy.equippedSlot = parseInt(nextState, 10) - 1;
       if (this.enemy.isAlive() && this.enemy.sprite) {

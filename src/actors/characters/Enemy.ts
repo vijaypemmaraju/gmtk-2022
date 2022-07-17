@@ -24,7 +24,8 @@ export default class Enemy {
     new EnemySimpleGun(),
     new EnemyShotgun(),
     new EnemyGrenadeLauncher(),
-    new EnemyMissleLauncher(),
+    new EnemyGrenadeLauncher(),
+    // new EnemyMissleLauncher(),
   ];
 
   equippedSlot = 0;
