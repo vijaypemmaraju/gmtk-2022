@@ -10,6 +10,7 @@ type Store = {
   debug: boolean;
   currentDieNumber: number;
   isDead: boolean;
+  hasWon: boolean;
 };
 const storeFunction = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,6 +25,7 @@ const storeFunction = (
   debug: false,
   currentDieNumber: 1,
   isDead: false,
+  hasWon: false,
 });
 // eslint-disable-next-line import/prefer-default-export
 

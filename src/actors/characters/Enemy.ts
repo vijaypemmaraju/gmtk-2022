@@ -42,6 +42,7 @@ export default class Enemy {
     this.health -= damage;
     if (this.health <= 0) {
       this.sprite.destroy();
+      useStore.setState({ hasWon: true });
     }
 
     this.health = Math.max(0, this.health);

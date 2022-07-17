@@ -13,20 +13,17 @@ const WEAPON_NAMES = {
 };
 
 const UI: FC = () => {
-  const [playerVelocityX, playerVelocityY] = useStore(
-    store => store.playerVelocity,
-  );
   const playerHealth = useStore(store => store.playerHealth);
   const enemyHealth = useStore(store => store.enemyHealth);
-  const blocked = useStore(store => store.blocked);
   const debug = useStore(store => store.debug);
   const currentDieNumber = useStore(store => store.currentDieNumber);
   const isDead = useStore(store => store.isDead);
+  const hasWon = useStore(store => store.hasWon);
 
   const modalToggleRef = React.useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (isDead) {
+    if (isDead || hasWon) {
       modalToggleRef.current!.checked = true;
     }
   });
@@ -56,23 +53,42 @@ const UI: FC = () => {
       </div>
       <input
         type="checkbox"
-        id="my-modal"
+        id="death-modal"
         className="modal-toggle"
         ref={modalToggleRef}
       />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Ouch...</h3>
-          <p className="py-4">That looked like it hurt.</p>
-          <div className="modal-action">
-            <button
-              type="button"
-              className="btn"
-              onClick={() => location.reload()}
-            >
-              Try Again
-            </button>
-          </div>
+          {isDead && (
+            <>
+              <h3 className="text-lg font-bold">Ouch...</h3>
+              <p className="py-4">That looked like it hurt.</p>
+              <div className="modal-action">
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => location.reload()}
+                >
+                  Try Again
+                </button>
+              </div>
+            </>
+          )}
+          {!isDead && hasWon && (
+            <>
+              <h3 className="text-lg font-bold">You Win!</h3>
+              <p className="py-4">You killed the enemy and won the game.</p>
+              <div className="modal-action">
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => location.reload()}
+                >
+                  Play Again
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
