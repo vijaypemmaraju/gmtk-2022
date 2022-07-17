@@ -1527,10 +1527,6 @@ body[dir="rtl"] .checkbox:checked,
   width: 100vw;
 }
 
-.w-\[50vw\] {
-  width: 50vw;
-}
-
 .w-\[340px\] {
   width: 340px;
 }
