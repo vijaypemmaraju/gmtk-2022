@@ -10,6 +10,20 @@ const PlayerStats = {
   dodgeMs: 250,
 };
 
+const rotateArray = (array: number[], amount: number) => {
+  const newArray = [...array];
+
+  for (let i = 0; i < newArray.length; i += 1) {
+    let newIndex = (i - amount) % newArray.length;
+    if (newIndex < 0) {
+      newIndex += newArray.length;
+    }
+    newArray[newIndex] = array[i];
+  }
+
+  return newArray;
+};
+
 export default class PlayerController {
   lastJumpTime: number | undefined = undefined;
 
@@ -40,17 +54,33 @@ export default class PlayerController {
 
   xVelocity = 0;
 
-  constructor(scene: Phaser.Scene) {
-    scene.load.spritesheet('player', 'assets/sprites/dice.png', {
-      frameWidth: 64,
-      frameHeight: 64,
-      spacing: 2,
-      margin: 2,
-    });
+  frames: string[];
+
+  // left, top, right, bottom
+  dieNumberNeighbors = {
+    6: [2, 4, 5, 3],
+    5: [6, 4, 1, 3],
+    4: [5, 6, 2, 1],
+    3: [2, 6, 5, 4],
+    2: [1, 4, 6, 3],
+    1: [5, 4, 2, 3],
+  };
+
+  currentDieNumber = 6;
+
+  currentDieNeighbors = [2, 4, 5, 3];
+
+  static preload(scene: Phaser.Scene) {
+    scene.load.atlas(
+      'player',
+      'assets/sprites/dice.png',
+      'assets/sprites/dice.json',
+    );
   }
 
   create(scene: Phaser.Scene) {
-    this.sprite = scene.matter.add.sprite(0, 0, 'player', 0);
+    this.sprite = scene.matter.add.sprite(0, 0, 'player', 6);
+    this.frames = scene.textures.get('player').getFrameNames();
     const { width, height } = this.sprite;
 
     // The player's body is going to be a compound body:
@@ -148,6 +178,7 @@ export default class PlayerController {
   }
 
   update(time: number, delta: number) {
+    this.sprite.setTexture('player', `dieRed${this.currentDieNumber}`);
     const isDodging =
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
 
@@ -163,7 +194,24 @@ export default class PlayerController {
     if (InputManager.getDodge()) {
       if (!isDodging) {
         this.lastDodgeTime = time;
-        this.xVelocity = Math.sign(this.xVelocity) * PlayerStats.dodgeVelocity;
+        const direction = Math.sign(this.xVelocity);
+        this.xVelocity = direction * PlayerStats.dodgeVelocity;
+        let newNumber;
+        if (direction === 1) {
+          // eslint-disable-next-line prefer-destructuring
+          newNumber = this.currentDieNeighbors[2];
+        } else if (direction === -1) {
+          // eslint-disable-next-line prefer-destructuring
+          newNumber = this.currentDieNeighbors[0];
+        }
+        const oldNumber = this.currentDieNumber;
+        this.currentDieNumber = newNumber;
+        const newNeighbors = this.dieNumberNeighbors[newNumber];
+        this.currentDieNeighbors = rotateArray(
+          newNeighbors,
+          newNeighbors.findIndex(n => n === oldNumber) +
+            (direction === 1 ? 0 : -2),
+        );
       }
     }
 
@@ -174,24 +222,36 @@ export default class PlayerController {
       this.sprite.setVelocityX(this.xVelocity);
     }
 
-    console.log(this.blocked);
-
     if (InputManager.getJump()) {
       const msSinceJump =
         time - (this.lastJumpTime ?? -PlayerStats.msBetweenJumps);
       if (msSinceJump >= PlayerStats.msBetweenJumps) {
+        let didJump = false;
         if (this.blocked.bottom) {
           this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
+          didJump = true;
         } else if (this.blocked.left) {
           // Jump up and away from the wall
           this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
           this.sprite.setVelocityX(PlayerStats.jumpVelocity);
+          didJump = true;
         } else if (this.blocked.right) {
           // Jump up and away from the wall
           this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
           this.sprite.setVelocityX(-PlayerStats.jumpVelocity);
+          didJump = true;
         }
-        this.lastJumpTime = time;
+        if (didJump) {
+          this.lastJumpTime = time;
+          const newNumber = this.currentDieNeighbors[1];
+          const oldNumber = this.currentDieNumber;
+          this.currentDieNumber = newNumber;
+          const newNeighbors: number[] = this.dieNumberNeighbors[newNumber];
+          this.currentDieNeighbors = rotateArray(
+            newNeighbors,
+            newNeighbors.findIndex(n => n === oldNumber) + 1,
+          );
+        }
       }
     }
   }
