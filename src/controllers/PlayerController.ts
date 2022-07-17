@@ -73,6 +73,8 @@ export default class PlayerController {
 
   currentDieNeighbors = [2, 4, 5, 3];
 
+  scene: Phaser.Scene;
+
   static preload(scene: Phaser.Scene) {
     scene.load.atlas(
       'player',
@@ -82,8 +84,20 @@ export default class PlayerController {
   }
 
   create(scene: Phaser.Scene) {
+    this.scene = scene;
     this.sprite = scene.matter.add.sprite(0, 0, 'player', 6);
     this.frames = scene.textures.get('player').getFrameNames();
+    scene.anims.create({
+      key: 'dodge-roll',
+      frames: [
+        { key: 'player', frame: this.frames[6], duration: 60 },
+        { key: 'player', frame: this.frames[7], duration: 60 },
+        { key: 'player', frame: this.frames[8], duration: 40 },
+        { key: 'player', frame: this.frames[9], duration: 40 },
+        { key: 'player', frame: this.frames[10], duration: 50 },
+      ],
+    });
+    console.log(this.frames);
     const { width, height } = this.sprite;
 
     // The player's body is going to be a compound body:
@@ -96,14 +110,20 @@ export default class PlayerController {
     const sx = width / 2;
     const sy = height / 2;
 
-    this.colliders.body = scene.matter.bodies.rectangle(sx, sy, width, height, {
-      // chamfer: { radius: 10 },
-    });
+    this.colliders.body = scene.matter.bodies.rectangle(
+      sx,
+      sy,
+      width / 2,
+      height,
+      {
+        // chamfer: { radius: 10 },
+      },
+    );
     this.colliders.bottom = scene.matter.bodies.rectangle(sx, height, sx, 5, {
       isSensor: true,
     });
     this.colliders.left = scene.matter.bodies.rectangle(
-      sx - width * 0.45,
+      sx - width * 0.25,
       sy,
       5,
       height * 0.25,
@@ -112,7 +132,7 @@ export default class PlayerController {
       },
     );
     this.colliders.right = scene.matter.bodies.rectangle(
-      sx + width * 0.45,
+      sx + width * 0.25,
       sy,
       5,
       height * 0.25,
@@ -181,7 +201,6 @@ export default class PlayerController {
   }
 
   update(time: number, delta: number) {
-    this.sprite.setTexture('player', `dieRed${this.currentDieNumber}`);
     const isDodging =
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
 
@@ -193,6 +212,8 @@ export default class PlayerController {
       targetVelocity,
       PlayerStats.acceleration * delta,
     );
+
+    this.sprite.flipX = this.xVelocity < 0;
 
     if (InputManager.getDodge()) {
       if (!isDodging) {
@@ -215,6 +236,13 @@ export default class PlayerController {
           newNeighbors.findIndex(n => n === oldNumber) +
             (direction === 1 ? 0 : -2),
         );
+        this.sprite.play('dodge-roll');
+        this.sprite.on('animationcomplete', () => {
+          this.sprite.setTexture(
+            'player',
+            `dice ${this.currentDieNumber - 1}.aseprite`,
+          );
+        });
       }
     }
 
@@ -257,6 +285,18 @@ export default class PlayerController {
       } else if (canDoubleJump) {
         doJump = true;
         this.hasDoubleJumped = true;
+        const newNumber = this.currentDieNeighbors[1];
+        const oldNumber = this.currentDieNumber;
+        this.currentDieNumber = newNumber;
+        const newNeighbors: number[] = this.dieNumberNeighbors[newNumber];
+        this.currentDieNeighbors = rotateArray(
+          newNeighbors,
+          newNeighbors.findIndex(n => n === oldNumber) + 1,
+        );
+        this.sprite.setTexture(
+          'player',
+          `dice ${this.currentDieNumber - 1}.aseprite`,
+        );
       }
     }
 
