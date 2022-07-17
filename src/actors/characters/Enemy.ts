@@ -14,7 +14,7 @@ import EnemyStateTwo from './states/EnemyStateTwo';
 
 export const EnemyStats = {
   maxHealth: 1000,
-  speed: 1,
+  speed: 2.5,
 };
 
 export default class Enemy {
