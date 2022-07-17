@@ -1,4 +1,5 @@
 import InputManager from '../managers/InputManager';
+import useStore from '../react/useStore';
 
 const PlayerStats = {
   acceleration: 0.01,
@@ -254,5 +255,12 @@ export default class PlayerController {
         }
       }
     }
+
+    useStore.setState({
+      playerVelocity: [
+        this.sprite.body.velocity.x,
+        this.sprite.body.velocity.y,
+      ],
+    });
   }
 }
