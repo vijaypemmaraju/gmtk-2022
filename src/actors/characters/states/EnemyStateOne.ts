@@ -4,7 +4,7 @@ import Enemy, { EnemyStats } from '../Enemy';
 import EnemyState from './EnemyState';
 
 export default class EnemyStateOne extends EnemyState {
-  ttlSeconds: number = 10;
+  ttlSeconds: number = 5;
 
   update(
     controller: EnemyController,
