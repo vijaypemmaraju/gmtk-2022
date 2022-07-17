@@ -33,7 +33,7 @@ const UI: FC = () => {
       {debug && <Debug />}
       <div className="flex">
         <div
-          className="w-[13%] stats stats-vertical"
+          className="w-[340px] stats stats-vertical"
           style={{ backgroundColor: 'rgb(49, 46, 127, .6)' }}
         >
           <div className="stat">
