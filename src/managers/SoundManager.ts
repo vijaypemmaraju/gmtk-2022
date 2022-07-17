@@ -19,7 +19,7 @@ export default class SoundManager {
     const detune = Phaser.Math.FloatBetween(-variance * 100, variance * 100);
     this.sounds[sound].play({
       volume,
-      detune: detune,
+      detune,
     });
   }
 }
