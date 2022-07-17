@@ -5,6 +5,9 @@ type Store = {
   playerVelocity: number[];
   playerHealth: number;
   enemyHealth: number;
+  blocked: {
+    [key: string]: boolean;
+  };
 };
 const storeFunction = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,6 +18,7 @@ const storeFunction = (
   playerVelocity: [0, 0],
   playerHealth: 5,
   enemyHealth: 0,
+  blocked: {},
 });
 // eslint-disable-next-line import/prefer-default-export
 

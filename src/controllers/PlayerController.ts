@@ -167,6 +167,21 @@ export default class PlayerController {
       ],
     });
     scene.anims.create({
+      key: 'double-jump',
+      frames: [
+        { key: 'player', frame: this.frames[36], duration: 60 },
+        { key: 'player', frame: this.frames[37], duration: 60 },
+        { key: 'player', frame: this.frames[38], duration: 40 },
+        { key: 'player', frame: this.frames[39], duration: 40 },
+        { key: 'player', frame: this.frames[40], duration: 50 },
+        { key: 'player', frame: this.frames[41], duration: 50 },
+      ],
+    });
+    scene.anims.create({
+      key: 'wall-slide',
+      frames: [{ key: 'player', frame: this.frames[42] }],
+    });
+    scene.anims.create({
       key: 'idle1',
       frames: [{ key: 'player', frame: this.frames[0] }],
     });
@@ -354,15 +369,17 @@ export default class PlayerController {
       }
     }
 
+    const currentAnimation = this.sprite.anims.currentAnim?.key;
     if (
       (this.xVelocity > 0 && !this.blocked.right) ||
       (this.xVelocity < 0 && !this.blocked.left)
     ) {
       this.sprite.setVelocityX(this.xVelocity);
-      const currentAnimation = this.sprite.anims.currentAnim?.key;
       if (
         this.blocked.bottom &&
         currentAnimation !== 'dodge-roll' &&
+        currentAnimation !== 'double-jump' &&
+        currentAnimation !== 'wall-slide' &&
         !currentAnimation.includes('run')
       ) {
         this.sprite.play(`run${this.currentDieNumber}`);
@@ -370,8 +387,12 @@ export default class PlayerController {
     }
 
     // check if xVelocity is near 0
-    if (Math.abs(this.xVelocity) < 0.5) {
-      this.sprite.play(`idle${this.currentDieNumber}`);
+    if (Math.abs(this.xVelocity) < 0.5 && currentAnimation !== 'double-jump') {
+      if (this.blocked.left || this.blocked.right) {
+        this.sprite.play(`wall-slide`);
+      } else {
+        this.sprite.play(`idle${this.currentDieNumber}`);
+      }
     }
 
     let doJump = false;
@@ -414,10 +435,14 @@ export default class PlayerController {
           newNeighbors,
           newNeighbors.findIndex(n => n === oldNumber) + 1,
         );
-        this.sprite.setTexture(
-          'player',
-          `dice ${this.currentDieNumber - 1}.aseprite`,
-        );
+        this.sprite.play(`double-jump`);
+        this.sprite.on('animationcomplete', () => {
+          if (Math.abs(this.xVelocity) > 0.5) {
+            this.sprite.play(`run${this.currentDieNumber}`);
+          } else {
+            this.sprite.play(`idle${this.currentDieNumber}`);
+          }
+        });
       }
     }
 
@@ -430,6 +455,7 @@ export default class PlayerController {
         this.sprite.body.velocity.x,
         this.sprite.body.velocity.y,
       ],
+      blocked: this.blocked,
     });
     // #endregion
 
