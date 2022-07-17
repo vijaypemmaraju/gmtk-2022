@@ -31,24 +31,44 @@ const UI: FC = () => {
   return (
     <div className="w-[100vw] h-[100vh]">
       {debug && <Debug />}
-      <div
-        className="w-full h-5 bg-red-800"
-        style={{ width: `${(enemyHealth / EnemyStats.maxHealth) * 100}%` }}
-      />
-      <div
-        className="p-6 w-[25%]"
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-      >
-        <h4>Weapon</h4>
-        <div className="flex">
-          <img src={`assets/sprites/dieFaces${currentDieNumber}.png`} alt="" />
-          <h6 className="pl-2">{WEAPON_NAMES[currentDieNumber]}</h6>
+      <div className="flex">
+        <div
+          className="w-[13%] stats stats-vertical"
+          style={{ backgroundColor: 'rgb(49, 46, 127, .6)' }}
+        >
+          <div className="stat">
+            <div className="stat-title">Weapon</div>
+            <div className="flex w-full stat-value">
+              <img
+                src={`assets/sprites/dieFaces${currentDieNumber}.png`}
+                alt=""
+                style={{ width: 40 }}
+              />
+            </div>
+            <div className="text-lg stat-desc">
+              {WEAPON_NAMES[currentDieNumber]}
+            </div>
+          </div>
+          <div className="stat">
+            <div className="stat-title">Health</div>
+            <div className="flex stat-value">
+              {Array.from({ length: playerHealth }).map((_, i) => (
+                <img key={i} src="assets/sprites/dieFaces1.png" alt="player" />
+              ))}
+            </div>
+          </div>
         </div>
-        <h4>Health</h4>
-        <div className="flex">
-          {Array.from({ length: playerHealth }).map((_, i) => (
-            <img key={i} src="assets/sprites/dieFaces1.png" alt="player" />
-          ))}
+        <div className="flex items-start justify-center w-full pt-2 opacity-70">
+          <div className="w-[80%] text-center">
+            <h1 className="text-5xl">D4</h1>
+            <h1 className="text-3xl">The All-Seeing Die</h1>
+            <div
+              className="w-full h-5 bg-red-800"
+              style={{
+                width: `${(enemyHealth / EnemyStats.maxHealth) * 100}%`,
+              }}
+            />
+          </div>
         </div>
       </div>
       <input
@@ -75,7 +95,7 @@ const UI: FC = () => {
             </>
           )}
           {!isDead && hasWon && (
-            <>
+            <div>
               <h3 className="text-lg font-bold">You Win!</h3>
               <p className="py-4">You killed the enemy and won the game.</p>
               <div className="modal-action">
@@ -87,7 +107,7 @@ const UI: FC = () => {
                   Play Again
                 </button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
