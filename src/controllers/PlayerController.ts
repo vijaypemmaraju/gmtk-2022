@@ -55,6 +55,8 @@ export default class PlayerController {
 
   xVelocity = 0;
 
+  hasDoubleJumped = false;
+
   frames: string[];
 
   // left, top, right, bottom
@@ -223,37 +225,43 @@ export default class PlayerController {
       this.sprite.setVelocityX(this.xVelocity);
     }
 
-    if (InputManager.getJump()) {
+    let doJump = false;
+    if (InputManager.getJump() || InputManager.getJustJumped()) {
       const msSinceJump =
         time - (this.lastJumpTime ?? -PlayerStats.msBetweenJumps);
-      if (msSinceJump >= PlayerStats.msBetweenJumps) {
-        let didJump = false;
-        if (this.blocked.bottom) {
-          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
-          didJump = true;
-        } else if (this.blocked.left) {
-          // Jump up and away from the wall
-          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
-          this.sprite.setVelocityX(PlayerStats.jumpVelocity);
-          didJump = true;
-        } else if (this.blocked.right) {
-          // Jump up and away from the wall
-          this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
-          this.sprite.setVelocityX(-PlayerStats.jumpVelocity);
-          didJump = true;
-        }
-        if (didJump) {
-          this.lastJumpTime = time;
-          const newNumber = this.currentDieNeighbors[1];
-          const oldNumber = this.currentDieNumber;
-          this.currentDieNumber = newNumber;
-          const newNeighbors: number[] = this.dieNumberNeighbors[newNumber];
-          this.currentDieNeighbors = rotateArray(
-            newNeighbors,
-            newNeighbors.findIndex(n => n === oldNumber) + 1,
-          );
-        }
+      const canJump =
+        msSinceJump >= PlayerStats.msBetweenJumps &&
+        !isDodging &&
+        (this.blocked.bottom || this.blocked.left || this.blocked.right);
+
+      const canDoubleJump =
+        InputManager.getJustJumped() &&
+        !canJump &&
+        !this.hasDoubleJumped &&
+        !this.blocked.bottom &&
+        !this.blocked.left &&
+        !this.blocked.right;
+
+      if (this.blocked.bottom || this.blocked.left || this.blocked.right) {
+        this.hasDoubleJumped = false;
       }
+
+      if (canJump) {
+        doJump = true;
+        this.lastJumpTime = time;
+        if (this.blocked.left) {
+          this.xVelocity = PlayerStats.jumpVelocity;
+        } else if (this.blocked.right) {
+          this.xVelocity = -PlayerStats.jumpVelocity;
+        }
+      } else if (canDoubleJump) {
+        doJump = true;
+        this.hasDoubleJumped = true;
+      }
+    }
+
+    if (doJump) {
+      this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
     }
 
     useStore.setState({
