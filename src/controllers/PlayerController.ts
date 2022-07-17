@@ -62,7 +62,7 @@ export default class PlayerController {
     bottom: false,
   };
 
-  xVelocity = 0;
+  xVelocity = 0.00001;
 
   hasDoubleJumped = false;
 
@@ -393,10 +393,10 @@ export default class PlayerController {
         const direction = Math.sign(this.xVelocity);
         this.xVelocity = direction * PlayerStats.dodgeVelocity;
         let newNumber;
-        if (direction === 1) {
+        if (direction >= 0) {
           // eslint-disable-next-line prefer-destructuring
           newNumber = this.currentDieNeighbors[2];
-        } else if (direction === -1) {
+        } else {
           // eslint-disable-next-line prefer-destructuring
           newNumber = this.currentDieNeighbors[0];
         }
