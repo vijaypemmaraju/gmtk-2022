@@ -5,7 +5,7 @@ import SimpleGun from '../SimpleGun';
 import { WeaponStats } from '../Weapon';
 
 const EnemySimpleGunStats: WeaponStats = {
-  msBetweenFires: 150,
+  msBetweenFires: 350,
 };
 
 export default class EnemySimpleGun extends SimpleGun {
