@@ -21,7 +21,7 @@ const storeFunction = (
   enemyHealth: 0,
   blocked: {},
   debug: false,
-  currentDieNumber: 0,
+  currentDieNumber: 1,
 });
 // eslint-disable-next-line import/prefer-default-export
 
