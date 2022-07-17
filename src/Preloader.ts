@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Enemy from './actor/Enemy';
+import ProjectileOne from './actors/weapons/PlayerWeapons/WeaponOne/ProjectileOne';
 import PlayerController from './controllers/PlayerController';
 
 export default class Preloader {
@@ -7,5 +8,6 @@ export default class Preloader {
   static preload(scene: Phaser.Scene) {
     PlayerController.preload(scene);
     Enemy.preload(scene);
+    ProjectileOne.preload(scene);
   }
 }

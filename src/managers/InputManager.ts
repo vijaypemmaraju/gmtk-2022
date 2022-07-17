@@ -1,17 +1,39 @@
+const InputConfig = {
+  up: Phaser.Input.Keyboard.KeyCodes.W,
+  upAlt: Phaser.Input.Keyboard.KeyCodes.UP,
+  right: Phaser.Input.Keyboard.KeyCodes.D,
+  rightAlt: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+  left: Phaser.Input.Keyboard.KeyCodes.A,
+  leftAlt: Phaser.Input.Keyboard.KeyCodes.LEFT,
+  jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
+  dodge: Phaser.Input.Keyboard.KeyCodes.SHIFT,
+};
+
+type InputKeys = {
+  [key in keyof typeof InputConfig]: Phaser.Input.Keyboard.Key;
+};
 export default class InputManager {
-  static cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  static keys: InputKeys;
+
+  static pointer: Phaser.Input.Pointer;
+
+  static sceneInput: Phaser.Input.InputPlugin;
 
   constructor(scene: Phaser.Scene) {
-    InputManager.cursorKeys = scene.input.keyboard.createCursorKeys();
+    InputManager.keys = scene.input.keyboard.addKeys(
+      InputConfig,
+      true,
+    ) as InputKeys;
+    InputManager.pointer = scene.input.mousePointer;
   }
 
   static getXAxis(): number {
     let axis = 0;
-    if (InputManager.cursorKeys.right.isDown) {
+    if (InputManager.keys.right.isDown || InputManager.keys.rightAlt.isDown) {
       axis += 1;
     }
 
-    if (InputManager.cursorKeys.left.isDown) {
+    if (InputManager.keys.left.isDown || InputManager.keys.leftAlt.isDown) {
       axis -= 1;
     }
 
@@ -19,7 +41,7 @@ export default class InputManager {
   }
 
   static getJump(): boolean {
-    return InputManager.cursorKeys.space.isDown;
+    return InputManager.keys.jump.isDown;
   }
 
   static getJustJumped(): boolean {
@@ -27,6 +49,14 @@ export default class InputManager {
   }
 
   static getDodge(): boolean {
-    return InputManager.cursorKeys.shift.isDown;
+    return InputManager.keys.dodge.isDown;
+  }
+
+  static getFire(): boolean {
+    return InputManager.pointer.leftButtonDown();
+  }
+
+  static getAim(): Phaser.Math.Vector2 {
+    return InputManager.pointer.position;
   }
 }

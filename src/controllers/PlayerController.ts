@@ -1,3 +1,4 @@
+import PlayerCharacter from '../actors/characters/PlayerCharacter';
 import InputManager from '../managers/InputManager';
 import useStore from '../react/useStore';
 
@@ -31,6 +32,8 @@ export default class PlayerController {
   lastDodgeTime: number | undefined = undefined;
 
   sprite: Phaser.Physics.Matter.Sprite;
+
+  character: PlayerCharacter;
 
   colliders: {
     body?: MatterJS.BodyType;
@@ -81,6 +84,10 @@ export default class PlayerController {
       'assets/sprites/dice.png',
       'assets/sprites/dice.json',
     );
+  }
+
+  constructor() {
+    this.character = new PlayerCharacter();
   }
 
   create(scene: Phaser.Scene) {
@@ -208,11 +215,13 @@ export default class PlayerController {
     });
   }
 
-  update(time: number, delta: number) {
+  update(time: number, delta: number, scene: Phaser.Scene) {
+    this.sprite.setTexture('player', `dieRed${this.currentDieNumber}`);
+
+    // #region Movement
     const isDodging =
       time - (this.lastDodgeTime ?? -PlayerStats.dodgeMs) < PlayerStats.dodgeMs;
 
-    // Update movement
     const targetVelocity = InputManager.getXAxis() * PlayerStats.maxVelocity;
 
     this.xVelocity = Phaser.Math.Linear(
@@ -318,5 +327,22 @@ export default class PlayerController {
         this.sprite.body.velocity.y,
       ],
     });
+    // #endregion
+
+    // #region Action
+
+    const playerWeapon = this.character.getEquippedWeapon();
+    if (InputManager.getFire() && playerWeapon.canFire(time)) {
+      const spawnPosition = new Phaser.Math.Vector2(
+        this.sprite.x,
+        this.sprite.y,
+      );
+      const spawnDirection = InputManager.getAim()
+        .subtract(spawnPosition)
+        .normalize();
+      playerWeapon.fire(spawnPosition, spawnDirection, time, scene);
+    }
+
+    // #endregion
   }
 }
