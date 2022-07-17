@@ -1,4 +1,5 @@
 import React, { FC, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { EnemyStats } from '../actors/characters/Enemy';
 import Debug from './Debug';
 import useStore from './useStore';
@@ -117,14 +118,20 @@ const UI: FC = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-start justify-center w-full pt-5 opacity-70">
+            <div className="flex items-start justify-center w-full pt-8 opacity-70">
               <div className="w-[80%] text-center">
                 <h1 className="text-5xl">D4</h1>
                 <h1 className="text-3xl">The All-Seeing Die</h1>
-                <div
-                  className="w-full h-5 bg-red-800 border-2 border-black"
-                  style={{
+                <motion.div
+                  className="w-full h-5 mt-2 bg-red-800 border-2 border-black"
+                  initial={{
+                    width: 0,
+                  }}
+                  animate={{
                     width: `${(enemyHealth / EnemyStats.maxHealth) * 100}%`,
+                  }}
+                  transition={{
+                    duration: 0.5,
                   }}
                 />
               </div>
