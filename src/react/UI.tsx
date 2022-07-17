@@ -44,7 +44,7 @@ const UI: FC = () => {
           </button>
           <div className="divider" />
           <h1 className="py-4 text-3xl">Controls</h1>
-          <div className="flex flex-wrap gap-8">
+          <div className="flex flex-wrap justify-center gap-8">
             <div className="p-3 border border-gray-900 rounded-xl bg-base-100">
               <h2 className="py-4 text-2xl">Movement</h2>
               <div className="flex gap-3 py-1">
