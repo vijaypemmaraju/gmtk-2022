@@ -11,7 +11,7 @@ useStore.subscribe(store => {
   if (store.gameState === 'Game' && game === null) {
     game = new Phaser.Game({
       type: Phaser.WEBGL,
-      backgroundColor: '#1a1a1a',
+      backgroundColor: '#125555',
       width: window.innerWidth,
       height: window.innerHeight,
       scene: [Main, UI],
