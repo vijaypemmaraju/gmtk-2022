@@ -337,6 +337,8 @@ export default class PlayerController {
 
     this.sprite.flipX = this.xVelocity < 0;
 
+    this.character.equippedSlot = this.currentDieNumber - 1;
+
     if (InputManager.getDodge()) {
       if (!isDodging) {
         this.lastDodgeTime = time;

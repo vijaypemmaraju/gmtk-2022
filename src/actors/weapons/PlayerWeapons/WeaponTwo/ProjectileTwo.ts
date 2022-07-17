@@ -1,12 +1,12 @@
 import ProjectileManager from '../../../../managers/ProjectileManager';
 import Projectile from '../../Projectile';
 
-const ProjectileOneStats = {
-  speed: 8,
+const ProjectileTwoStats = {
+  speed: 5,
   damage: 5,
 };
 
-export default class ProjectileOne implements Projectile {
+export default class ProjectileTwo implements Projectile {
   direction: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
 
   sprite: Phaser.Physics.Matter.Sprite;
@@ -24,7 +24,7 @@ export default class ProjectileOne implements Projectile {
     direction: Phaser.Math.Vector2,
     scene: Phaser.Scene,
   ) {
-    this.direction = direction.clone().scale(ProjectileOneStats.speed);
+    this.direction = direction.clone().scale(ProjectileTwoStats.speed);
 
     this.sprite = scene.matter.add.sprite(
       position.x,
@@ -75,7 +75,7 @@ export default class ProjectileOne implements Projectile {
   onHit(body: MatterJS.BodyType): void {
     this.explode();
     if (body.label === 'enemy') {
-      ProjectileManager.applyEnemyDamage(ProjectileOneStats.damage);
+      ProjectileManager.applyEnemyDamage(ProjectileTwoStats.damage);
     }
   }
 
