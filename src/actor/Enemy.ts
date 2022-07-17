@@ -1,7 +1,7 @@
 import useStore from '../react/useStore';
 
 const EnemyStats = {
-  maxHealth: 100,
+  maxHealth: 1000,
 };
 
 export default class Enemy {

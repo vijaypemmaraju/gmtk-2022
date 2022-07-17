@@ -92,7 +92,7 @@ export default class PlayerController {
 
   create(scene: Phaser.Scene) {
     this.scene = scene;
-    this.sprite = scene.matter.add.sprite(0, 0, 'player', 6);
+    this.sprite = scene.matter.add.sprite(0, 0, 'player');
     (this.sprite.body as MatterJS.BodyType).label = 'player';
     this.frames = scene.textures.get('player').getFrameNames();
     scene.anims.create({
@@ -103,8 +103,94 @@ export default class PlayerController {
         { key: 'player', frame: this.frames[8], duration: 40 },
         { key: 'player', frame: this.frames[9], duration: 40 },
         { key: 'player', frame: this.frames[10], duration: 50 },
+        { key: 'player', frame: this.frames[11], duration: 50 },
       ],
     });
+    scene.anims.create({
+      key: 'run1',
+      repeat: -1,
+      frames: [
+        { key: 'player', frame: this.frames[12], duration: 60 },
+        { key: 'player', frame: this.frames[13], duration: 60 },
+        { key: 'player', frame: this.frames[14], duration: 60 },
+        { key: 'player', frame: this.frames[15], duration: 60 },
+      ],
+    });
+    scene.anims.create({
+      key: 'run2',
+      repeat: -1,
+      frames: [
+        { key: 'player', frame: this.frames[16], duration: 60 },
+        { key: 'player', frame: this.frames[17], duration: 60 },
+        { key: 'player', frame: this.frames[18], duration: 60 },
+        { key: 'player', frame: this.frames[19], duration: 60 },
+      ],
+    });
+    scene.anims.create({
+      key: 'run3',
+      repeat: -1,
+      frames: [
+        { key: 'player', frame: this.frames[20], duration: 60 },
+        { key: 'player', frame: this.frames[21], duration: 60 },
+        { key: 'player', frame: this.frames[22], duration: 60 },
+        { key: 'player', frame: this.frames[23], duration: 60 },
+      ],
+    });
+    scene.anims.create({
+      key: 'run4',
+      repeat: -1,
+      frames: [
+        { key: 'player', frame: this.frames[24], duration: 60 },
+        { key: 'player', frame: this.frames[25], duration: 60 },
+        { key: 'player', frame: this.frames[26], duration: 60 },
+        { key: 'player', frame: this.frames[27], duration: 60 },
+      ],
+    });
+    scene.anims.create({
+      key: 'run5',
+      repeat: -1,
+      frames: [
+        { key: 'player', frame: this.frames[28], duration: 60 },
+        { key: 'player', frame: this.frames[29], duration: 60 },
+        { key: 'player', frame: this.frames[30], duration: 60 },
+        { key: 'player', frame: this.frames[31], duration: 60 },
+      ],
+    });
+    scene.anims.create({
+      key: 'run6',
+      repeat: -1,
+      frames: [
+        { key: 'player', frame: this.frames[32], duration: 60 },
+        { key: 'player', frame: this.frames[33], duration: 60 },
+        { key: 'player', frame: this.frames[34], duration: 60 },
+        { key: 'player', frame: this.frames[35], duration: 60 },
+      ],
+    });
+    scene.anims.create({
+      key: 'idle1',
+      frames: [{ key: 'player', frame: this.frames[0] }],
+    });
+    scene.anims.create({
+      key: 'idle2',
+      frames: [{ key: 'player', frame: this.frames[1] }],
+    });
+    scene.anims.create({
+      key: 'idle3',
+      frames: [{ key: 'player', frame: this.frames[2] }],
+    });
+    scene.anims.create({
+      key: 'idle4',
+      frames: [{ key: 'player', frame: this.frames[3] }],
+    });
+    scene.anims.create({
+      key: 'idle5',
+      frames: [{ key: 'player', frame: this.frames[4] }],
+    });
+    scene.anims.create({
+      key: 'idle6',
+      frames: [{ key: 'player', frame: this.frames[5] }],
+    });
+
     const { width, height } = this.sprite;
 
     // The player's body is going to be a compound body:
@@ -259,10 +345,11 @@ export default class PlayerController {
         );
         this.sprite.play('dodge-roll');
         this.sprite.on('animationcomplete', () => {
-          this.sprite.setTexture(
-            'player',
-            `dice ${this.currentDieNumber - 1}.aseprite`,
-          );
+          if (Math.abs(this.xVelocity) > 0.5) {
+            this.sprite.play(`run${this.currentDieNumber}`);
+          } else {
+            this.sprite.play(`idle${this.currentDieNumber}`);
+          }
         });
       }
     }
@@ -272,6 +359,19 @@ export default class PlayerController {
       (this.xVelocity < 0 && !this.blocked.left)
     ) {
       this.sprite.setVelocityX(this.xVelocity);
+      const currentAnimation = this.sprite.anims.currentAnim?.key;
+      if (
+        this.blocked.bottom &&
+        currentAnimation !== 'dodge-roll' &&
+        !currentAnimation.includes('run')
+      ) {
+        this.sprite.play(`run${this.currentDieNumber}`);
+      }
+    }
+
+    // check if xVelocity is near 0
+    if (Math.abs(this.xVelocity) < 0.5) {
+      this.sprite.play(`idle${this.currentDieNumber}`);
     }
 
     let doJump = false;
