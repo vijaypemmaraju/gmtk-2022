@@ -97,7 +97,6 @@ export default class PlayerController {
         { key: 'player', frame: this.frames[10], duration: 50 },
       ],
     });
-    console.log(this.frames);
     const { width, height } = this.sprite;
 
     // The player's body is going to be a compound body:
@@ -171,8 +170,17 @@ export default class PlayerController {
       for (let i = 0; i < event.pairs.length; i += 1) {
         const { bodyA } = event.pairs[i];
         const { bodyB } = event.pairs[i];
-
         if (bodyA === playerBody || bodyB === playerBody) {
+          if (bodyA.label.includes('enemy') || bodyB.label.includes('enemy')) {
+            // launch player away from enemy
+            const enemy = bodyA.label === 'enemy' ? bodyA : bodyB;
+            const player = bodyA.label === 'enemy' ? bodyB : bodyA;
+            const { x: enemyX, y: enemyY } = enemy.position;
+            const { x: playerX, y: playerY } = player.position;
+            const x = enemyX - playerX;
+            this.xVelocity = -Math.sign(x) * 30;
+            this.sprite.setVelocityY(0);
+          }
           continue;
         } else if (bodyA === bottom || bodyB === bottom) {
           // Standing on any surface counts (e.g. jumping off of a non-static crate).
