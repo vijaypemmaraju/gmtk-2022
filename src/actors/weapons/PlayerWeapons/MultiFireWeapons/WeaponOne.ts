@@ -3,7 +3,7 @@ import { IProjectile } from '../../../projectiles/Projectile';
 import MultiFireWeapon, { MultiFireWeaponStats } from './MultiFireWeapon';
 
 const WeaponOneStats: MultiFireWeaponStats = {
-  msBetweenFires: 50,
+  msBetweenFires: 500,
   projectilesPerShot: 1,
 };
 
