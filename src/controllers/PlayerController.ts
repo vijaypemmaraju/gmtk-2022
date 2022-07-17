@@ -80,9 +80,9 @@ export default class PlayerController {
     1: [5, 4, 2, 3],
   };
 
-  currentDieNumber = 6;
+  currentDieNumber = 1;
 
-  currentDieNeighbors = [2, 4, 5, 3];
+  currentDieNeighbors = [5, 4, 2, 3];
 
   scene: Phaser.Scene;
 
