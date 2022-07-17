@@ -500,6 +500,14 @@ export default class PlayerController {
       }
     }
 
+    if (this.sprite.x <= 16) {
+      this.sprite.x = 16;
+    }
+
+    if (this.sprite.x >= 1264) {
+      this.sprite.x = 1264;
+    }
+
     if (doJump) {
       this.sprite.setVelocityY(-PlayerStats.jumpVelocity);
     }
@@ -512,6 +520,7 @@ export default class PlayerController {
       blocked: this.blocked,
       currentDieNumber: this.currentDieNumber,
     });
+
     // #endregion
 
     // #region Action
