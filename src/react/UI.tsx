@@ -37,7 +37,7 @@ const UI: FC = () => {
           <h1 className="pb-4 text-5xl">The Last D6</h1>
           <button
             type="button"
-            className="btn btn-primary"
+            className="pointer-events-auto btn btn-primary"
             onClick={() => useStore.setState({ gameState: 'Game' })}
           >
             Start Game
@@ -105,7 +105,7 @@ const UI: FC = () => {
                   <div className="modal-action">
                     <button
                       type="button"
-                      className="btn"
+                      className="pointer-events-auto btn"
                       onClick={() => location.reload()}
                     >
                       Try Again
@@ -122,7 +122,7 @@ const UI: FC = () => {
                   <div className="modal-action">
                     <button
                       type="button"
-                      className="btn"
+                      className="pointer-events-auto btn"
                       onClick={() => location.reload()}
                     >
                       Play Again
