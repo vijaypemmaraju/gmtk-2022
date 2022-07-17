@@ -3,11 +3,19 @@ import Projectile from '../actors/weapons/Projectile';
 export default class ProjectileManager {
   static projectiles: Projectile[] = [];
 
-  static addProjectile(projectile: Projectile) {
+  static addProjectile(projectile: Projectile, scene: Phaser.Scene) {
     ProjectileManager.projectiles.push(projectile);
     projectile.sprite.on('collide', (_a, _b, { bodyA, bodyB }) => {
       if (!bodyA.label.includes('player') && !bodyB.label.includes('player')) {
+        if (
+          bodyA.label.includes('projectile') &&
+          bodyB.label.includes('projectile')
+        ) {
+          return;
+        }
+        console.log('collision');
         projectile.onHit();
+        scene.cameras.main.shake(50, 0.0025, false);
         projectile.destroy();
         ProjectileManager.projectiles.splice(
           ProjectileManager.projectiles.indexOf(projectile),

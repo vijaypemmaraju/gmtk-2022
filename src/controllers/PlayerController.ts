@@ -130,6 +130,7 @@ export default class PlayerController {
     this.colliders.bottom = scene.matter.bodies.rectangle(sx, height, sx, 5, {
       isSensor: true,
     });
+    (this.colliders.bottom as MatterJS.BodyType).label = 'playerBottom';
     this.colliders.left = scene.matter.bodies.rectangle(
       sx - width * 0.25,
       sy,

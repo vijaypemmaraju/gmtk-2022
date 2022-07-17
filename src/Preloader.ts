@@ -9,5 +9,9 @@ export default class Preloader {
     PlayerController.preload(scene);
     Enemy.preload(scene);
     ProjectileOne.preload(scene);
+    scene.load.spritesheet('particle', 'assets/sprites/explosion.png', {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
   }
 }
