@@ -1,9 +1,16 @@
 import Projectile from '../actors/weapons/Projectile';
+import Main from '../scenes/Main';
 
 export default class ProjectileManager {
+  static scene: Main;
+
   static projectiles: Projectile[] = [];
 
-  static addProjectile(projectile: Projectile, scene: Phaser.Scene) {
+  constructor(scene: Main) {
+    ProjectileManager.scene = scene;
+  }
+
+  static addProjectile(projectile: Projectile) {
     ProjectileManager.projectiles.push(projectile);
     projectile.sprite.on('collide', (_a, _b, { bodyA, bodyB }) => {
       if (!bodyA.label.includes('player') && !bodyB.label.includes('player')) {
@@ -13,8 +20,8 @@ export default class ProjectileManager {
         ) {
           return;
         }
-        projectile.onHit();
-        scene.cameras.main.shake(50, 0.0025, false);
+        projectile.onHit(bodyA === projectile.sprite.body ? bodyB : bodyA);
+        ProjectileManager.scene.cameras.main.shake(50, 0.0025, false);
         projectile.destroy();
         ProjectileManager.projectiles.splice(
           ProjectileManager.projectiles.indexOf(projectile),
@@ -22,6 +29,10 @@ export default class ProjectileManager {
         );
       }
     });
+  }
+
+  static applyEnemyDamage(damage: number) {
+    ProjectileManager.scene.enemyController.enemy.hit(damage);
   }
 
   update(time: number, delta: number, scene: Phaser.Scene) {

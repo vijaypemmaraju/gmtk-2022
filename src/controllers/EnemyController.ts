@@ -36,7 +36,7 @@ export default class EnemyController {
       const nextState =
         nextStates[Phaser.Math.Between(0, nextStates.length - 1)];
       toggleService.send(nextState);
-      if (this.enemy.sprite) {
+      if (this.enemy.isAlive() && this.enemy.sprite) {
         this.enemy.sprite.setTexture(
           'd4',
           this.enemy.frames[parseInt(nextState, 10) - 1],
@@ -48,7 +48,7 @@ export default class EnemyController {
   update(time: number, delta: number): void {
     this.enemy.update(time, delta);
 
-    if (this.currentState === '4') {
+    if (this.enemy.isAlive() && this.currentState === '4') {
       const newX = this.enemy.sprite.x + Phaser.Math.Between(-5, 5);
       const newY = this.enemy.sprite.y + Phaser.Math.Between(-5, 5);
 

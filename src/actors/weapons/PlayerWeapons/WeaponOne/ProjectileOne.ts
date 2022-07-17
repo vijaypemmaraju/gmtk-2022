@@ -3,6 +3,7 @@ import Projectile from '../../Projectile';
 
 const ProjectileOneStats = {
   speed: 5,
+  damage: 5,
 };
 
 export default class ProjectileOne implements Projectile {
@@ -36,7 +37,7 @@ export default class ProjectileOne implements Projectile {
     );
     (this.sprite.body as MatterJS.BodyType).label = 'projectile';
 
-    ProjectileManager.addProjectile(this, scene);
+    ProjectileManager.addProjectile(this);
 
     this.particles = scene.add.particles('particle', 0);
     this.emitter = this.particles.createEmitter({
@@ -65,12 +66,15 @@ export default class ProjectileOne implements Projectile {
     this.sprite.setVelocity(velocity.x, velocity.y);
   }
 
-  onHit(): void {
-    this.explode();
-  }
-
   explode(): void {
     this.emitter.explode(1, this.sprite.x, this.sprite.y);
+  }
+
+  onHit(body: MatterJS.BodyType): void {
+    this.explode();
+    if (body.label === 'enemy') {
+      ProjectileManager.applyEnemyDamage(ProjectileOneStats.damage);
+    }
   }
 
   destroy(): void {

@@ -27,7 +27,7 @@ export default class Main extends Phaser.Scene {
 
   create() {
     this.inputManager = new InputManager(this);
-    this.projectileManager = new ProjectileManager();
+    this.projectileManager = new ProjectileManager(this);
     this.playerController = new PlayerController();
     this.playerController.create(this);
     const enemy = new Enemy();

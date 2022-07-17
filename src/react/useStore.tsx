@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 type Store = {
   playerVelocity: number[];
   playerHealth: number;
+  enemyHealth: number;
 };
 const storeFunction = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,6 +14,7 @@ const storeFunction = (
 ): Store => ({
   playerVelocity: [0, 0],
   playerHealth: 5,
+  enemyHealth: 0,
 });
 // eslint-disable-next-line import/prefer-default-export
 

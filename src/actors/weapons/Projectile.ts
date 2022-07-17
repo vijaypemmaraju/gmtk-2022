@@ -6,7 +6,7 @@ export default interface Projectile {
     scene: Phaser.Scene,
   );
   update(time: number, delta: number, scene: Phaser.Scene): void;
-  onHit(): void;
+  onHit(body: MatterJS.BodyType): void;
   shouldBeDestroyed(): boolean;
   destroy(): void;
 }

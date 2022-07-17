@@ -6,12 +6,15 @@ const UI: FC = () => {
     store => store.playerVelocity,
   );
   const playerHealth = useStore(store => store.playerHealth);
+  const enemyHealth = useStore(store => store.enemyHealth);
   return (
     <div className="w-[100vw] h-[100vh]">
       <div className="stat">
         <div className="stat-title">Player Velocity</div>
         <div className="stat-value">{playerVelocityX.toFixed(2)}</div>
         <div className="stat-value">{playerVelocityY.toFixed(2)}</div>
+        <div className="stat-title">Enemy Health</div>
+        <div className="stat-value">{enemyHealth}</div>
       </div>
       <div className="flex">
         {Array.from({ length: playerHealth }).map((_, i) => (
