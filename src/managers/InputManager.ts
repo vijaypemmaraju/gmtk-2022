@@ -45,7 +45,7 @@ export default class InputManager {
   }
 
   static getJustJumped(): boolean {
-    return Phaser.Input.Keyboard.JustDown(InputManager.cursorKeys.space);
+    return Phaser.Input.Keyboard.JustDown(InputManager.keys.jump);
   }
 
   static getDodge(): boolean {
