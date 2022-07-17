@@ -8,7 +8,7 @@ let game: Phaser.Game | null = null;
 
 game = new Phaser.Game({
   type: Phaser.WEBGL,
-  backgroundColor: '#125555',
+  backgroundColor: '#1a1a1a',
   width: window.innerWidth,
   height: window.innerHeight,
   scene: [Main, UI],
