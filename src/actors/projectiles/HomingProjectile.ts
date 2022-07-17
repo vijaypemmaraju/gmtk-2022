@@ -22,10 +22,12 @@ export default abstract class HomingProjectile extends Projectile {
     super.moveProjectile(time, delta, scene);
 
     const target = this.getTargetCharacter(scene as Main);
-    const targetDirection = new Phaser.Math.Vector2(target.x, target.y)
-      .subtract(new Phaser.Math.Vector2(this.sprite.x, this.sprite.y))
-      .normalize();
-    const lerpValue = (1 - 1 / this.stats.homingForce) * (delta / 1000);
-    this.direction = this.direction.lerp(targetDirection, lerpValue);
+    if (target.body) {
+      const targetDirection = new Phaser.Math.Vector2(target.x, target.y)
+        .subtract(new Phaser.Math.Vector2(this.sprite.x, this.sprite.y))
+        .normalize();
+      const lerpValue = (1 - 1 / this.stats.homingForce) * (delta / 1000);
+      this.direction = this.direction.lerp(targetDirection, lerpValue);
+    }
   }
 }
