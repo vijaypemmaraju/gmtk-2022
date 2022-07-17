@@ -1,7 +1,11 @@
 import useStore from '../../react/useStore';
 import Collision from '../Collision';
+import EnemyGrenadeLauncher from '../weapons/EnemyWeapons/EnemyGrenadeLauncher';
+import EnemyMissleLauncher from '../weapons/EnemyWeapons/EnemyMissleLauncher';
 import EnemyShotgun from '../weapons/EnemyWeapons/EnemyShotgun';
+import EnemySimpleGun from '../weapons/EnemyWeapons/EnemySimpleGun';
 import SimpleGun from '../weapons/SimpleGun';
+import Weapon from '../weapons/Weapon';
 
 export const EnemyStats = {
   maxHealth: 1000,
@@ -16,10 +20,21 @@ export default class Enemy {
 
   health = EnemyStats.maxHealth;
 
-  equippedWeapon = new EnemyShotgun();
+  inventory: Weapon[] = [
+    new EnemySimpleGun(),
+    new EnemyShotgun(),
+    new EnemyGrenadeLauncher(),
+    new EnemyMissleLauncher(),
+  ];
+
+  equippedSlot = 0;
 
   static preload(scene: Phaser.Scene) {
     scene.load.atlas('d4', 'assets/sprites/d4.png', 'assets/sprites/d4.json');
+  }
+
+  getEquippedWeapon(): Weapon {
+    return this.inventory[this.equippedSlot];
   }
 
   hit(damage: number) {

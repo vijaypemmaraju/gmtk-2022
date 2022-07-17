@@ -37,6 +37,7 @@ export default class EnemyController {
       const nextState =
         nextStates[Phaser.Math.Between(0, nextStates.length - 1)];
       toggleService.send(nextState);
+      this.enemy.equippedSlot = parseInt(nextState, 10) - 1;
       if (this.enemy.isAlive() && this.enemy.sprite) {
         this.enemy.sprite.setTexture(
           'd4',
@@ -61,8 +62,10 @@ export default class EnemyController {
         this.enemy.sprite.setVelocity(newVelocity.x, newVelocity.y);
       }
 
+      const equippedWeapon = this.enemy.getEquippedWeapon();
+
       if (
-        this.enemy.equippedWeapon.canFire(time) &&
+        equippedWeapon.canFire(time) &&
         scene.playerController.sprite?.active
       ) {
         const firePosition = new Phaser.Math.Vector2(
@@ -74,12 +77,7 @@ export default class EnemyController {
           scene.playerController.sprite.y,
         );
         const fireDirection = playerPosition.subtract(firePosition).normalize();
-        this.enemy.equippedWeapon.fire(
-          firePosition,
-          fireDirection,
-          time,
-          scene,
-        );
+        equippedWeapon.fire(firePosition, fireDirection, time, scene);
       }
     }
   }
