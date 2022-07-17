@@ -1,7 +1,7 @@
 export default class SoundManager {
   static sounds: { [key: string]: Phaser.Sound.BaseSound } = {};
 
-  static SOUND_NAMES = ['shoot', 'enemy_shoot', 'explosion'];
+  static SOUND_NAMES = ['shoot', 'enemy_shoot', 'explosion', 'weapon_switch'];
 
   static preload(scene: Phaser.Scene) {
     SoundManager.SOUND_NAMES.forEach(sound => {

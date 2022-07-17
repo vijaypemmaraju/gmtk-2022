@@ -30,10 +30,10 @@ export default class Main extends Phaser.Scene {
 
   create() {
     const music = this.sound.add('music', {
-      volume: 0.5,
+      volume: 0.25,
       loop: true,
     });
-    music.play();
+    // music.play();
     this.inputManager = new InputManager(this);
     this.projectileManager = new ProjectileManager(this);
     this.playerController = new PlayerController();
@@ -64,7 +64,7 @@ export default class Main extends Phaser.Scene {
         matterBody.setCollisionCategory(Collision.COLLISION_CATEGORIES.Map);
         matterBody.setCollidesWith(Collision.COLLISION_MASKS.Map);
       });
-    this.matter.world.createDebugGraphic();
+    // this.matter.world.createDebugGraphic();
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
   }
 

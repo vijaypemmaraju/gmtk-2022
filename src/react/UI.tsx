@@ -1,5 +1,15 @@
 import React, { FC } from 'react';
+import Debug from './Debug';
 import useStore from './useStore';
+
+const WEAPON_NAMES = {
+  1: 'Basic',
+  2: 'Spread',
+  3: 'Triple Shot',
+  4: "'Splosions",
+  5: 'The Deluge',
+  6: 'Take Me Home',
+};
 
 const UI: FC = () => {
   const [playerVelocityX, playerVelocityY] = useStore(
@@ -9,35 +19,17 @@ const UI: FC = () => {
   const enemyHealth = useStore(store => store.enemyHealth);
   const blocked = useStore(store => store.blocked);
   const debug = useStore(store => store.debug);
+  const currentDieNumber = useStore(store => store.currentDieNumber);
   return (
     <div className="w-[100vw] h-[100vh]">
-      {debug && (
-        <>
-          <div className="stat">
-            <div className="stat-title">Player Velocity</div>
-            <div className="stat-value">{playerVelocityX.toFixed(2)}</div>
-            <div className="stat-value">{playerVelocityY.toFixed(2)}</div>
-            <div className="stat-title">Enemy Health</div>
-            <div className="stat-value">{enemyHealth}</div>
-            <div className="stat-title">Blocked</div>
-            <div className="stat-value">
-              left: {blocked.left ? 'Yes' : 'No '}
-            </div>
-            <div className="stat-value">
-              right: {blocked.right ? 'Yes' : 'No '}
-            </div>
-            <div className="stat-value">
-              bottom: {blocked.bottom ? 'Yes' : 'No'}
-            </div>
-          </div>
-          <div className="stat-title">Player Health</div>
-          <div className="flex">
-            {Array.from({ length: playerHealth }).map((_, i) => (
-              <img key={i} src="assets/sprites/die.png" alt="player" />
-            ))}
-          </div>
-        </>
-      )}
+      {debug && <Debug />}
+      <div
+        className="p-6 w-[25%] flex"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      >
+        <img src={`assets/sprites/dieFaces${currentDieNumber}.png`} alt="" />
+        <h6 className="pl-2">{WEAPON_NAMES[currentDieNumber]}</h6>
+      </div>
     </div>
   );
 };

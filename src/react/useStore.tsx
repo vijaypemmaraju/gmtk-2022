@@ -9,6 +9,7 @@ type Store = {
     [key: string]: boolean;
   };
   debug: boolean;
+  currentDieNumber: number;
 };
 const storeFunction = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -21,6 +22,7 @@ const storeFunction = (
   enemyHealth: 0,
   blocked: {},
   debug: false,
+  currentDieNumber: 0,
 });
 // eslint-disable-next-line import/prefer-default-export
 

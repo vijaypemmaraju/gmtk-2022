@@ -16,7 +16,7 @@ game = new Phaser.Game({
   physics: {
     default: 'matter',
     matter: {
-      debug: true,
+      // debug: true,
     },
   },
 });

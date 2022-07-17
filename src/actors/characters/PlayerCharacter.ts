@@ -10,7 +10,7 @@ import PlayerMissleLauncher from '../weapons/PlayerWeapons/PlayerMissleLauncher'
 import PlayerShotgun from '../weapons/PlayerWeapons/PlayerShotgun';
 import Weapon from '../weapons/Weapon';
 
-const PlayerStats = {
+export const PlayerStats = {
   maxHealth: 5,
 };
 

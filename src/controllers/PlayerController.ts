@@ -1,6 +1,7 @@
 import PlayerCharacter from '../actors/characters/PlayerCharacter';
 import Collision from '../actors/Collision';
 import InputManager from '../managers/InputManager';
+import SoundManager from '../managers/SoundManager';
 import useStore from '../react/useStore';
 
 const PlayerStats = {
@@ -353,6 +354,10 @@ export default class PlayerController {
     });
   }
 
+  playSwitchWeaponSound() {
+    SoundManager.play('weapon_switch', 0.1, 1);
+  }
+
   update(time: number, delta: number, scene: Phaser.Scene) {
     // #region Movement
     const isDodging =
@@ -397,6 +402,7 @@ export default class PlayerController {
         const oldNumber = this.currentDieNumber;
         this.currentDieNumber = newNumber;
         const newNeighbors = this.dieNumberNeighbors[newNumber];
+        this.playSwitchWeaponSound();
         this.currentDieNeighbors = rotateArray(
           newNeighbors,
           newNeighbors.findIndex(n => n === oldNumber) +
@@ -475,6 +481,7 @@ export default class PlayerController {
         const oldNumber = this.currentDieNumber;
         this.currentDieNumber = newNumber;
         const newNeighbors: number[] = this.dieNumberNeighbors[newNumber];
+        this.playSwitchWeaponSound();
         this.currentDieNeighbors = rotateArray(
           newNeighbors,
           newNeighbors.findIndex(n => n === oldNumber) + 1,
@@ -500,6 +507,7 @@ export default class PlayerController {
         this.sprite.body.velocity.y,
       ],
       blocked: this.blocked,
+      currentDieNumber: this.currentDieNumber,
     });
     // #endregion
 
